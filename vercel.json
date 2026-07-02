@@ -1,0 +1,10 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install --legacy-peer-deps",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "@diaspora_api_url",
+    "NEXT_PUBLIC_SITE_URL": "@diaspora_site_url",
+    "NEXT_PUBLIC_STRIPE_PUBLIC_KEY": "@stripe_public_key"
+  }
+}
