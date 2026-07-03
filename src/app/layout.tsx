@@ -6,14 +6,21 @@ import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
   title: {
-    default: 'SankofaX â€” Global Black & African Business Directory',
+    default: 'SankofaX - Global Black & African Business Directory',
     template: '%s | SankofaX',
   },
   description: 'Find Black-owned and African businesses, wellness retreats, healthcare providers, tech companies, and more worldwide.',
   keywords: ['Black-owned businesses', 'African diaspora', 'Black directory', 'African businesses worldwide'],
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
   openGraph: {
     type: 'website',
     siteName: 'SankofaX',
+    title: 'SankofaX - Global Black & African Business Directory',
+    description: 'Discover, support, and connect with Black and African-owned businesses across the diaspora.',
   },
 }
 

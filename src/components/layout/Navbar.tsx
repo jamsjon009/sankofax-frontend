@@ -40,7 +40,7 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/login" className="btn-ghost text-sm">Sign in</Link>
-                <Link href="/register" className="btn-primary text-sm">Register</Link>
+                <Link href="/list-your-business" className="btn-primary text-sm">List your business</Link>
               </>
             )}
           </div>
@@ -58,11 +58,11 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white animate-fade-in">
           <div className="px-4 py-3 space-y-1">
-            <Link href="/" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>Home</Link>
-            <Link href="/about" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>About</Link>
-            <Link href="/directory" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>Directory</Link>
-            <Link href="/pricing" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>Pricing</Link>
-            <Link href="/blog" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>Blog</Link>
+            <Link href="/" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Home</Link>
+            <Link href="/about" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>About</Link>
+            <Link href="/directory" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Directory</Link>
+            <Link href="/pricing" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Pricing</Link>
+            <Link href="/blog" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Blog</Link>
             <div className="pt-2 border-t border-gray-100 flex flex-col gap-2">
               {user ? (
                 <>
@@ -72,7 +72,7 @@ export default function Navbar() {
               ) : (
                 <>
                   <Link href="/login" className="btn-outline w-full justify-center" onClick={() => setMobileOpen(false)}>Sign in</Link>
-                  <Link href="/register" className="btn-primary w-full justify-center" onClick={() => setMobileOpen(false)}>Register</Link>
+                  <Link href="/list-your-business" className="btn-primary w-full justify-center" onClick={() => setMobileOpen(false)}>List your business</Link>
                 </>
               )}
             </div>

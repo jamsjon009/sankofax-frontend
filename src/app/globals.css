@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -26,6 +26,7 @@
 }
 
 @layer components {
+  /* Buttons */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
            bg-primary-700 text-white font-medium text-sm
@@ -47,11 +48,17 @@
            transition-all duration-150;
   }
 
+  /* Cards */
   .card {
     @apply bg-white rounded-2xl shadow-card border border-gray-100
            transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5;
   }
 
+  .card-static {
+    @apply bg-white rounded-2xl shadow-card border border-gray-100;
+  }
+
+  /* Forms */
   .input {
     @apply w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white
            text-charcoal placeholder:text-muted text-sm
@@ -59,27 +66,52 @@
            transition-all duration-150;
   }
 
+  /* Badges */
   .badge {
     @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium;
   }
 
+  /* Typography */
   .section-title {
     @apply text-2xl sm:text-3xl font-semibold tracking-tight text-charcoal;
   }
+
+  /* Navigation */
+  .nav-mobile-link {
+    @apply block py-2 text-sm font-medium text-charcoal hover:text-primary-700 transition-colors;
+  }
+
+  /* Progress bar - used for subscription usage */
+  .progress-track {
+    @apply h-2 bg-gray-200 rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full bg-primary-500 rounded-full transition-all duration-300;
+  }
 }
 
-/* Skeleton loader */
+/* Utility classes */
 .skeleton {
   @apply animate-pulse bg-gray-200 rounded-lg;
 }
 
-/* Star rating */
 .stars {
   @apply flex items-center gap-0.5 text-accent-400;
 }
 
-/* Leaflet overrides */
+/* Leaflet map overrides */
 .leaflet-container {
   border-radius: 1rem;
   z-index: 0;
+}
+
+/* Animate fade-in for mobile menu */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out;
 }

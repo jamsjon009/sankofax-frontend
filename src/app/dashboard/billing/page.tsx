@@ -132,7 +132,7 @@ export default function BillingPage() {
                     {sub?.listings_used ?? 0} / {sub?.plan?.max_listings ?? 1}
                   </p>
                 </div>
-                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="progress-track">
                   <div
                     className="h-full bg-primary-500 rounded-full transition-all"
                     style={{ width: `${Math.min(100, ((sub?.listings_used ?? 0) / (sub?.plan?.max_listings ?? 1)) * 100)}%` }}
@@ -258,3 +258,4 @@ function UpgradeCard({ plan }: { plan: Plan }) {
     </div>
   )
 }
+
