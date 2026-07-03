@@ -1,112 +1,228 @@
-﻿import Link from 'next/link'
-import { Check, ArrowRight } from 'lucide-react'
+﻿'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { Check, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Plan } from '@/types'
 
-const FALLBACK_PLANS = [
-  {
-    name: 'Directory Basic',
-    price: '15',
-    billing_cycle: 'month',
-    features: ['1 Business Listing', 'Basic Profile Page', 'Community Visibility', 'Email Support'],
-    popular: false,
-  },
-  {
-    name: 'Directory Pro',
-    price: '29',
-    billing_cycle: 'month',
-    features: ['3 Business Listings', 'Featured Placement', 'Analytics Dashboard', 'Photo Gallery', 'Priority Support'],
-    popular: true,
-  },
-  {
-    name: 'Directory Elite',
-    price: '99',
-    billing_cycle: 'month',
-    features: ['Unlimited Listings', 'Premium Placement', 'Advanced Analytics', 'Dedicated Account Manager', 'Custom Brand Page'],
-    popular: false,
-  },
-]
+const STATIC_PLANS = {
+  global_north: [
+    {
+      name: 'Directory Basic',
+      tagline: 'Get listed and get discovered',
+      price: '15',
+      period: 'month',
+      ribbon: null,
+      features: [
+        '1 Business Listing',
+        'Basic Profile Page',
+        'Community Visibility',
+        'Search & Category Listing',
+        'Email Support',
+      ],
+    },
+    {
+      name: 'Directory Pro',
+      tagline: 'All benefits at a globally conscious rate',
+      price: '29',
+      period: 'month',
+      ribbon: 'Most Popular',
+      features: [
+        '3 Business Listings',
+        'Featured Placement',
+        'Photo Gallery (up to 10)',
+        'Analytics Dashboard',
+        'WhatsApp & Social Links',
+        'Priority Support',
+      ],
+    },
+    {
+      name: 'Directory Elite',
+      tagline: 'Premium placement, same perks, half the cost',
+      price: '99',
+      period: 'month',
+      ribbon: 'Billed Annually',
+      features: [
+        'Unlimited Business Listings',
+        'Premium Homepage Placement',
+        'Advanced Analytics',
+        'Dedicated Account Manager',
+        'Custom Brand Page',
+        'Featured in Newsletter',
+        'Priority Search Ranking',
+      ],
+    },
+  ],
+  global_south: [
+    {
+      name: 'Directory Basic',
+      tagline: 'Same features — equitable pricing',
+      price: '7.50',
+      period: 'month',
+      ribbon: null,
+      features: [
+        '1 Business Listing',
+        'Basic Profile Page',
+        'Community Visibility',
+        'Search & Category Listing',
+        'Email Support',
+      ],
+    },
+    {
+      name: 'Directory Pro',
+      tagline: 'All benefits at a globally conscious rate',
+      price: '14.50',
+      period: 'month',
+      ribbon: 'Most Popular',
+      features: [
+        '3 Business Listings',
+        'Featured Placement',
+        'Photo Gallery (up to 10)',
+        'Analytics Dashboard',
+        'WhatsApp & Social Links',
+        'Priority Support',
+      ],
+    },
+    {
+      name: 'Directory Elite',
+      tagline: 'Premium placement, same perks, half the cost',
+      price: '24.50',
+      period: 'month',
+      ribbon: 'Billed Annually',
+      features: [
+        'Unlimited Business Listings',
+        'Premium Homepage Placement',
+        'Advanced Analytics',
+        'Dedicated Account Manager',
+        'Custom Brand Page',
+        'Featured in Newsletter',
+        'Priority Search Ranking',
+      ],
+    },
+  ],
+}
 
-export default function PricingPreviewSection({ plans }: { plans: Plan[] }) {
-  const displayPlans = Array.isArray(plans) && plans.length > 0 ? plans : null
+const REGION_LABELS: Record<string, { label: string; sub: string }> = {
+  global_north: { label: 'GLOBAL NORTH', sub: '(United States, UK, Canada, EU, Australia, etc.)' },
+  global_south: { label: 'GLOBAL SOUTH', sub: '(Africa, Caribbean, Latin America, South & Southeast Asia)' },
+}
+
+function PlanCard({ plan, index }: { plan: typeof STATIC_PLANS.global_north[0]; index: number }) {
+  const [expanded, setExpanded] = useState(false)
+  const isPopular = plan.ribbon === 'Most Popular'
+  const isElite = plan.ribbon === 'Billed Annually'
+  const hasRibbon = !!plan.ribbon
 
   return (
-    <section className="bg-surface-2 py-16">
+    <div className={cn('pricing-card', isPopular && 'pricing-card-popular')}>
+      {/* Ribbon badge */}
+      {hasRibbon && (
+        <div className={cn('pricing-ribbon', isPopular ? 'pricing-ribbon-popular' : 'pricing-ribbon-elite')}>
+          <span>{plan.ribbon}</span>
+        </div>
+      )}
+
+      <div className="pricing-card-body">
+        <h3 className="pricing-plan-name">{plan.name}</h3>
+        <p className="pricing-plan-tagline">{plan.tagline}</p>
+
+        <div className="pricing-price-row">
+          <span className="pricing-currency">$</span>
+          <span className="pricing-amount">{plan.price}</span>
+          <span className="pricing-period">/{plan.period}</span>
+        </div>
+
+        <hr className="pricing-divider" />
+
+        {/* Collapsed: CTA only. Expanded: show features */}
+        {expanded && (
+          <ul className="pricing-features">
+            {plan.features.map((f, i) => (
+              <li key={i} className="pricing-feature-item">
+                <Check className="pricing-check-icon" />
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="pricing-toggle-btn"
+        >
+          {expanded ? (
+            <>Show Less <ChevronUp className="w-4 h-4" /></>
+          ) : (
+            <>Show More <ChevronDown className="w-4 h-4" /></>
+          )}
+        </button>
+
+        <Link href="/list-your-business" className="pricing-cta-btn">
+          Get Started
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+export default function PricingPreviewSection({ plans }: { plans: Plan[] }) {
+  const [region, setRegion] = useState<'global_north' | 'global_south'>('global_north')
+  const displayPlans = STATIC_PLANS[region]
+  const regionInfo = REGION_LABELS[region]
+
+  return (
+    <section className="pricing-section">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="section-title mb-3">Fair Pricing for a Global Community</h2>
-          <p className="text-muted text-sm max-w-lg mx-auto">
-            Regional pricing for Global North and Global South &mdash; because accessibility matters.
+
+        {/* Header */}
+        <div className="text-center mb-10">
+          <h2 className="pricing-main-title">
+            Fair Pricing for a <span className="pricing-title-accent">Global Community</span>
+          </h2>
+          <p className="pricing-subtitle">
+            We recognise the <strong>economic differences between regions</strong>, and we believe equitable
+            access is non-negotiable. That&apos;s why we offer <strong>tiered pricing</strong>:
           </p>
         </div>
 
-        {displayPlans ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {displayPlans.slice(0, 3).map((plan, i) => {
-              const isPopular = i === 1
-              return (
-                <div
-                  key={plan.id}
-                  className={cn(
-                    'rounded-2xl p-6 border flex flex-col',
-                    isPopular
-                      ? 'bg-primary-700 text-white border-primary-600 shadow-xl scale-[1.02]'
-                      : 'bg-white border-gray-100 shadow-card',
-                  )}
-                >
-                  <h3 className={cn('font-bold text-lg', isPopular ? 'text-white' : 'text-charcoal')}>{plan.name}</h3>
-                  <div className="mt-3 mb-5">
-                    <span className={cn('text-3xl font-bold', isPopular ? 'text-white' : 'text-charcoal')}>${plan.price}</span>
-                    <span className={cn('text-xs ml-1', isPopular ? 'text-white/60' : 'text-muted')}>/{plan.billing_cycle}</span>
-                  </div>
-                  <ul className="space-y-2 flex-1">
-                    {(plan.features_list ?? []).slice(0, 4).map((f, fi) => (
-                      <li key={fi} className="flex items-center gap-2 text-sm">
-                        <Check className={cn('w-3.5 h-3.5 flex-shrink-0', isPopular ? 'text-accent-400' : 'text-primary-600')} />
-                        <span className={isPopular ? 'text-white/80' : 'text-charcoal'}>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )
-            })}
+        {/* Region toggle */}
+        <div className="pricing-toggle-row">
+          <div className="pricing-toggle">
+            <button
+              onClick={() => setRegion('global_north')}
+              className={cn('pricing-toggle-btn-region', region === 'global_north' && 'pricing-toggle-btn-active')}
+            >
+              Global North
+            </button>
+            <button
+              onClick={() => setRegion('global_south')}
+              className={cn('pricing-toggle-btn-region', region === 'global_south' && 'pricing-toggle-btn-active')}
+            >
+              Global South
+            </button>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {FALLBACK_PLANS.map((plan, i) => (
-              <div
-                key={plan.name}
-                className={cn(
-                  'rounded-2xl p-6 border flex flex-col',
-                  plan.popular
-                    ? 'bg-primary-700 text-white border-primary-600 shadow-xl scale-[1.02]'
-                    : 'bg-white border-gray-100 shadow-card',
-                )}
-              >
-                <h3 className={cn('font-bold text-lg', plan.popular ? 'text-white' : 'text-charcoal')}>{plan.name}</h3>
-                <div className="mt-3 mb-5">
-                  <span className={cn('text-3xl font-bold', plan.popular ? 'text-white' : 'text-charcoal')}>${plan.price}</span>
-                  <span className={cn('text-xs ml-1', plan.popular ? 'text-white/60' : 'text-muted')}>/{plan.billing_cycle}</span>
-                </div>
-                <ul className="space-y-2 flex-1">
-                  {plan.features.map((f, fi) => (
-                    <li key={fi} className="flex items-center gap-2 text-sm">
-                      <Check className={cn('w-3.5 h-3.5 flex-shrink-0', plan.popular ? 'text-accent-400' : 'text-primary-600')} />
-                      <span className={plan.popular ? 'text-white/80' : 'text-charcoal'}>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        )}
+        </div>
 
-        <div className="mt-10 text-center">
-          <Link href="/pricing" className="btn-primary gap-2">
-            View All Plans &amp; Compare
+        {/* Region label */}
+        <div className="text-center mb-10">
+          <h3 className="pricing-region-label">{regionInfo.label}</h3>
+          <p className="pricing-region-sub">{regionInfo.sub}</p>
+        </div>
+
+        {/* Plan cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+          {displayPlans.map((plan, i) => (
+            <PlanCard key={plan.name} plan={plan} index={i} />
+          ))}
+        </div>
+
+        {/* Footer link */}
+        <div className="mt-12 text-center">
+          <Link href="/pricing" className="pricing-view-all">
+            View full pricing details
             <ArrowRight className="w-4 h-4" />
           </Link>
-          <p className="text-xs text-muted mt-3">Global South pricing also available &mdash; up to 60% less</p>
         </div>
       </div>
     </section>
