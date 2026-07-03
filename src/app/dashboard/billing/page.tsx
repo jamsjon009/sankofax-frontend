@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -31,7 +31,7 @@ const STATUS_LABELS: Record<string, string> = {
   canceled: 'Canceled',
 }
 
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1'
+const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'
 
 export default function BillingPage() {
   const [sub, setSub] = useState<Subscription | null>(null)
@@ -50,7 +50,7 @@ export default function BillingPage() {
     ])
       .then(([subData, plansData]) => {
         setSub(subData)
-        setAllPlans(plansData.results ?? plansData)
+        setAllPlans(Array.isArray(plansData) ? plansData : [])
       })
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -74,7 +74,7 @@ export default function BillingPage() {
     }
   }
 
-  const upgradePlans = allPlans.filter(p => p.tier_level > (sub?.plan?.tier_level ?? 0) && p.price > 0)
+  const upgradePlans = allPlans.filter(p => p.tier_level > (sub?.plan?.tier_level ?? 0) && Number(p.price) > 0)
 
   return (
     <DashboardShell>
@@ -114,7 +114,7 @@ export default function BillingPage() {
                   {sub?.plan ? (
                     <>
                       <p className="text-2xl font-bold text-charcoal">
-                        {sub.plan.currency === 'USD' ? '$' : '£'}{sub.plan.price}
+                        {sub.plan.currency === 'USD' ? '$' : 'Â£'}{sub.plan.price}
                       </p>
                       <p className="text-xs text-muted">/{sub.plan.billing_cycle}</p>
                     </>
@@ -141,7 +141,7 @@ export default function BillingPage() {
                 {(sub?.listings_used ?? 0) >= (sub?.plan?.max_listings ?? 1) && (
                   <p className="text-xs text-amber-700 mt-2 flex items-center gap-1">
                     <AlertCircle className="w-3.5 h-3.5" />
-                    Limit reached — upgrade to add more listings
+                    Limit reached â€” upgrade to add more listings
                   </p>
                 )}
               </div>
@@ -167,7 +167,7 @@ export default function BillingPage() {
                     className="btn-outline gap-2"
                   >
                     <CreditCard className="w-4 h-4" />
-                    {portalLoading ? 'Opening…' : 'Manage Billing & Invoices'}
+                    {portalLoading ? 'Openingâ€¦' : 'Manage Billing & Invoices'}
                     <ExternalLink className="w-3.5 h-3.5 text-muted" />
                   </button>
                   <p className="text-xs text-muted mt-2">Update payment method, download invoices, or cancel.</p>
@@ -243,7 +243,7 @@ function UpgradeCard({ plan }: { plan: Plan }) {
       </div>
       <div className="text-right flex-shrink-0">
         <p className="font-bold text-charcoal">
-          {plan.currency === 'USD' ? '$' : '£'}{plan.price}
+          {plan.currency === 'USD' ? '$' : 'Â£'}{plan.price}
           <span className="text-xs font-normal text-muted">/{plan.billing_cycle}</span>
         </p>
       </div>
@@ -252,7 +252,7 @@ function UpgradeCard({ plan }: { plan: Plan }) {
         disabled={loading}
         className="btn-primary text-sm px-4 py-2 gap-1.5 flex-shrink-0"
       >
-        {loading ? 'Loading…' : 'Upgrade'}
+        {loading ? 'Loadingâ€¦' : 'Upgrade'}
         {!loading && <ArrowRight className="w-3.5 h-3.5" />}
       </button>
     </div>

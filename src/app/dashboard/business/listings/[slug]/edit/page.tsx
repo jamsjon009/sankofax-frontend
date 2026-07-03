@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
@@ -14,10 +14,10 @@ import type { Category, Amenity } from '@/types'
 import { cn } from '@/lib/utils'
 
 const PRICE_RANGES = [
-  { value: '$', label: '$ · Budget' },
-  { value: '$$', label: '$$ · Mid-range' },
-  { value: '$$$', label: '$$$ · Upscale' },
-  { value: '$$$$', label: '$$$$ · Luxury' },
+  { value: '$', label: '$ - Budget' },
+  { value: '$$', label: '$$ - Mid-range' },
+  { value: '$$$', label: '$$$ - Upscale' },
+  { value: '$$$$', label: '$$$$ - Luxury' },
 ]
 
 const COUNTRIES = [
@@ -77,7 +77,7 @@ export default function EditListingPage() {
     if (!token) return
 
     Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1'}/listings/${slug}/`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'}/listings/${slug}/`, {
         headers: { Authorization: `Bearer ${token}` },
       }).then(r => {
         if (!r.ok) throw new Error('not found')
@@ -87,8 +87,8 @@ export default function EditListingPage() {
       amenityApi.list(),
     ])
       .then(([listing, catsData, amsData]) => {
-        setAllCategories(catsData.results ?? catsData)
-        setAllAmenities(amsData.results ?? amsData)
+        setAllCategories(Array.isArray(catsData) ? catsData : [])
+        setAllAmenities(Array.isArray(amsData) ? amsData : [])
         reset({
           category: listing.category?.id ?? listing.category,
           title: listing.title,
@@ -151,7 +151,7 @@ export default function EditListingPage() {
         <div className="text-center py-16">
           <AlertCircle className="w-12 h-12 text-muted mx-auto mb-4" />
           <h2 className="text-lg font-semibold text-charcoal mb-2">Listing not found</h2>
-          <p className="text-sm text-muted mb-4">This listing doesn&apos;t exist or you don&apos;t have permission to edit it.</p>
+          <p className="text-sm text-muted mb-4">This listing does not exist or you do not have permission to edit it.</p>
           <Link href="/dashboard/business" className="btn-primary">Back to My Listings</Link>
         </div>
       </DashboardShell>
@@ -161,7 +161,6 @@ export default function EditListingPage() {
   return (
     <DashboardShell>
       <div className="max-w-2xl">
-        {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <Link href="/dashboard/business" className="btn-ghost p-2 rounded-xl text-muted hover:text-charcoal -ml-2">
             <ArrowLeft className="w-5 h-5" />
@@ -187,7 +186,6 @@ export default function EditListingPage() {
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Details */}
           <div className="card p-6 space-y-5">
             <h2 className="text-sm font-semibold text-charcoal border-b border-gray-100 pb-3">Listing Details</h2>
 
@@ -204,7 +202,7 @@ export default function EditListingPage() {
 
             <div>
               <label className="block text-sm font-medium text-charcoal mb-1.5">Listing Title *</label>
-              <input {...register('title')} className="input" placeholder="e.g. Roots & Greens Kitchen" />
+              <input {...register('title')} className="input" placeholder="e.g. Roots and Greens Kitchen" />
               {errors.title && <p className="text-red-600 text-xs mt-1">{errors.title.message}</p>}
             </div>
 
@@ -227,7 +225,6 @@ export default function EditListingPage() {
             </div>
           </div>
 
-          {/* Contact */}
           <div className="card p-6 space-y-4">
             <h2 className="text-sm font-semibold text-charcoal border-b border-gray-100 pb-3">Contact & Details</h2>
 
@@ -252,7 +249,6 @@ export default function EditListingPage() {
               </div>
             </div>
 
-            {/* Price range */}
             <div>
               <label className="block text-sm font-medium text-charcoal mb-2">Price Range <span className="text-muted font-normal">(optional)</span></label>
               <div className="flex gap-2 flex-wrap">
@@ -274,7 +270,6 @@ export default function EditListingPage() {
               </div>
             </div>
 
-            {/* Amenities */}
             {allAmenities.length > 0 && (
               <div>
                 <label className="block text-sm font-medium text-charcoal mb-2">Features & Amenities</label>
@@ -299,7 +294,6 @@ export default function EditListingPage() {
             )}
           </div>
 
-          {/* Location */}
           <div className="card p-6 space-y-4">
             <h2 className="text-sm font-semibold text-charcoal border-b border-gray-100 pb-3">Location</h2>
 
@@ -343,7 +337,6 @@ export default function EditListingPage() {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex items-center justify-between">
             <Link href="/dashboard/business" className="btn-outline gap-2">
               <ArrowLeft className="w-4 h-4" />
@@ -353,7 +346,7 @@ export default function EditListingPage() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Saving…
+                  Saving...
                 </>
               ) : (
                 <>

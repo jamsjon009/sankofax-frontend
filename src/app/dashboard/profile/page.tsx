@@ -9,7 +9,7 @@ import DashboardShell from '@/components/dashboard/DashboardShell'
 import { useAuth } from '@/hooks/useAuth'
 import { tokenStore } from '@/lib/auth'
 
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1'
+const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'
 
 const schema = z.object({
   bio: z.string().optional(),

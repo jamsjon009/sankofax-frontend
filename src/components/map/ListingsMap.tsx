@@ -27,7 +27,8 @@ export default function ListingsMap({ listings, center = [20, 0], zoom = 2 }: Pr
       const L = (await import('leaflet')).default
 
       // Fix default marker icon paths broken by webpack
-      delete (L.Icon.Default.prototype as Record<string, unknown>)._getIconUrl
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (L.Icon.Default.prototype as any)._getIconUrl
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
         iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',

@@ -1,7 +1,7 @@
-﻿import type { MetadataRoute } from 'next'
+import type { MetadataRoute } from 'next'
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sankofax.com'
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1'
+const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'
 
 async function fetchAllSlugs(endpoint: string, slugField = 'slug'): Promise<string[]> {
   const slugs: string[] = []

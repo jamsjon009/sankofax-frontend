@@ -1,11 +1,10 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, X, ChevronDown, User, LogOut } from 'lucide-react'
+import { Menu, X, User, LogOut } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
 import { useAuth } from '@/hooks/useAuth'
-import { cn } from '@/lib/utils'
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -15,20 +14,18 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link href="/" className="flex-shrink-0">
             <Logo size="sm" />
           </Link>
 
-          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
+            <Link href="/" className="btn-ghost text-sm">Home</Link>
+            <Link href="/about" className="btn-ghost text-sm">About</Link>
             <Link href="/directory" className="btn-ghost text-sm">Directory</Link>
-            <Link href="/events" className="btn-ghost text-sm">Events</Link>
-            <Link href="/marketplace" className="btn-ghost text-sm">Shop</Link>
             <Link href="/pricing" className="btn-ghost text-sm">Pricing</Link>
+            <Link href="/blog" className="btn-ghost text-sm">Blog</Link>
           </nav>
 
-          {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-2">
@@ -43,12 +40,11 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/login" className="btn-ghost text-sm">Sign in</Link>
-                <Link href="/list-your-business" className="btn-primary text-sm">List your business</Link>
+                <Link href="/register" className="btn-primary text-sm">Register</Link>
               </>
             )}
           </div>
 
-          {/* Mobile menu toggle */}
           <button
             className="md:hidden btn-ghost p-2"
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -59,14 +55,14 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white animate-fade-in">
           <div className="px-4 py-3 space-y-1">
+            <Link href="/" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>Home</Link>
+            <Link href="/about" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>About</Link>
             <Link href="/directory" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>Directory</Link>
-            <Link href="/events" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>Events</Link>
-            <Link href="/marketplace" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>Shop</Link>
             <Link href="/pricing" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>Pricing</Link>
+            <Link href="/blog" className="block py-2 text-sm font-medium text-charcoal" onClick={() => setMobileOpen(false)}>Blog</Link>
             <div className="pt-2 border-t border-gray-100 flex flex-col gap-2">
               {user ? (
                 <>
@@ -76,7 +72,7 @@ export default function Navbar() {
               ) : (
                 <>
                   <Link href="/login" className="btn-outline w-full justify-center" onClick={() => setMobileOpen(false)}>Sign in</Link>
-                  <Link href="/list-your-business" className="btn-primary w-full justify-center" onClick={() => setMobileOpen(false)}>List your business</Link>
+                  <Link href="/register" className="btn-primary w-full justify-center" onClick={() => setMobileOpen(false)}>Register</Link>
                 </>
               )}
             </div>

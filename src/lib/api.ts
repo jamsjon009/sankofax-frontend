@@ -3,7 +3,7 @@ import type {
   PaginatedResponse, CompanyProfile, User, Amenity,
 } from '@/types'
 
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1'
+const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
@@ -51,13 +51,15 @@ export const auth = {
 
 // Categories
 export const categories = {
-  list: () => request<Category[]>('/categories/'),
+  list: () => request<Category[] | { results: Category[] }>('/categories/')
+    .then(r => Array.isArray(r) ? r : (r.results ?? [])),
   get: (slug: string) => request<Category>(`/categories/${slug}/`),
 }
 
 // Amenities
 export const amenities = {
-  list: () => request<Amenity[]>('/amenities/'),
+  list: () => request<Amenity[] | { results: Amenity[] }>('/amenities/')
+    .then(r => Array.isArray(r) ? r : (r.results ?? [])),
 }
 
 // Authenticated listing CRUD

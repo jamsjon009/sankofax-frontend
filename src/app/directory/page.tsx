@@ -20,8 +20,8 @@ interface SearchParams {
   page?: string
 }
 
-export default async function DirectoryPage({ searchParams }: { searchParams: SearchParams }) {
-  const sp = searchParams
+export default async function DirectoryPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const sp = await searchParams
 
   const [cats, data] = await Promise.all([
     categories.list().catch(() => []),

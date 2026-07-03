@@ -28,7 +28,7 @@ export default function StarRating({
         ))}
       </div>
       <span className={cn('font-medium text-charcoal', size === 'md' ? 'text-sm' : 'text-xs')}>
-        {rating.toFixed(1)}
+        {Number(rating).toFixed(1)}
       </span>
       {count !== undefined && (
         <span className={cn('text-muted', size === 'md' ? 'text-sm' : 'text-xs')}>
