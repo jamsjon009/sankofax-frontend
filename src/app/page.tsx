@@ -5,6 +5,7 @@ import FeaturedListings from '@/components/home/FeaturedListings'
 import WhyListSection from '@/components/home/WhyListSection'
 import MissionVisionSection from '@/components/home/MissionVisionSection'
 import TestimonialsSection from '@/components/home/TestimonialsSection'
+import LatestBlogsSection from '@/components/home/LatestBlogsSection'
 import FAQSection from '@/components/home/FAQSection'
 import CTABanner from '@/components/home/CTABanner'
 import NewsletterSection from '@/components/home/NewsletterSection'
@@ -23,9 +24,10 @@ export default async function HomePage() {
       <FeaturedListings listings={featured.results} />
       <WhyListSection />
       <MissionVisionSection />
-      <CTABanner />
       <TestimonialsSection />
+      <LatestBlogsSection />
       <FAQSection />
+      <CTABanner />
       <NewsletterSection />
     </>
   )
