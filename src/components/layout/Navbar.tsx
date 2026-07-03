@@ -2,13 +2,30 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Menu, X, User, LogOut } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
 import { useAuth } from '@/hooks/useAuth'
+import { cn } from '@/lib/utils'
+
+const NAV_LINKS = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/directory', label: 'Directory' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/contact', label: 'Contact' },
+]
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const { user, logout } = useAuth()
+  const pathname = usePathname()
+
+  function isActive(href: string) {
+    if (href === '/') return pathname === '/'
+    return pathname.startsWith(href)
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
@@ -18,18 +35,34 @@ export default function Navbar() {
             <Logo size="sm" />
           </Link>
 
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
-            <Link href="/" className="btn-ghost text-sm">Home</Link>
-            <Link href="/about" className="btn-ghost text-sm">About</Link>
-            <Link href="/directory" className="btn-ghost text-sm">Directory</Link>
-            <Link href="/pricing" className="btn-ghost text-sm">Pricing</Link>
-            <Link href="/blog" className="btn-ghost text-sm">Blog</Link>
+            {NAV_LINKS.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  'px-4 py-2 rounded-xl text-sm font-medium transition-all',
+                  isActive(link.href)
+                    ? 'bg-primary-50 text-primary-700 font-semibold'
+                    : 'text-charcoal hover:bg-surface-2',
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
 
+          {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-2">
-                <Link href="/dashboard" className="btn-ghost text-sm gap-1.5">
+                <Link href="/dashboard" className={cn(
+                  'inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all',
+                  pathname.startsWith('/dashboard')
+                    ? 'bg-primary-50 text-primary-700 font-semibold'
+                    : 'text-charcoal hover:bg-surface-2',
+                )}>
                   <User className="w-4 h-4" />
                   Dashboard
                 </Link>
@@ -45,6 +78,7 @@ export default function Navbar() {
             )}
           </div>
 
+          {/* Mobile toggle */}
           <button
             className="md:hidden btn-ghost p-2"
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -55,14 +89,25 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white animate-fade-in">
           <div className="px-4 py-3 space-y-1">
-            <Link href="/" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Home</Link>
-            <Link href="/about" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>About</Link>
-            <Link href="/directory" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Directory</Link>
-            <Link href="/pricing" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Pricing</Link>
-            <Link href="/blog" className="nav-mobile-link" onClick={() => setMobileOpen(false)}>Blog</Link>
+            {NAV_LINKS.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  'block py-2 px-3 rounded-xl text-sm font-medium transition-colors',
+                  isActive(link.href)
+                    ? 'bg-primary-50 text-primary-700 font-semibold'
+                    : 'text-charcoal hover:text-primary-700',
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
             <div className="pt-2 border-t border-gray-100 flex flex-col gap-2">
               {user ? (
                 <>
