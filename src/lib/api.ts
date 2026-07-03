@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   Category, ListingCard, ListingDetail, Review, Plan,
   PaginatedResponse, CompanyProfile, User, Amenity,
 } from '@/types'
@@ -153,7 +153,8 @@ export const listings = {
 export const plans = {
   list: (region?: string) => {
     const q = region ? `?region=${region}` : ''
-    return request<Plan[]>(`/plans/${q}`)
+    return request<Plan[] | { results: Plan[] }>(`/plans/${q}`)
+      .then(r => Array.isArray(r) ? r : (r.results ?? []))
   },
 }
 
