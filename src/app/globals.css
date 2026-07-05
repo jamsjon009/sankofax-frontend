@@ -6,6 +6,11 @@
   :root {
     --font-sans: 'Inter', system-ui, sans-serif;
     --font-display: 'Georgia', serif;
+    --color-gold: #b5813b;
+    --color-gold-dark: #8a6028;
+    --color-gold-light: #d9983a;
+    --color-cream: #fdf9f4;
+    --color-cream-2: #f7f0e6;
   }
 
   * { box-sizing: border-box; }
@@ -13,6 +18,7 @@
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -23,90 +29,192 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold tracking-tight;
   }
+
+  /* Focus ring — gold */
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: rgb(181 129 59 / 0.2);
+    color: #4e3616;
+  }
 }
 
 @layer components {
-  /* Buttons */
+
+  /* ── Buttons ─────────────────────────────── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
-           bg-primary-700 text-white font-medium text-sm
-           hover:bg-primary-800 active:scale-[0.98]
-           transition-all duration-150 disabled:opacity-50 disabled:pointer-events-none;
+           bg-primary-600 text-white font-medium text-sm
+           hover:bg-primary-700 active:bg-primary-800 active:scale-[0.97]
+           focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2
+           transition-all duration-150 disabled:opacity-50 disabled:pointer-events-none
+           shadow-sm hover:shadow-md;
   }
 
   .btn-outline {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
-           border border-primary-700 text-primary-700 font-medium text-sm
-           hover:bg-primary-50 active:scale-[0.98]
+           border border-primary-600 text-primary-700 font-medium text-sm bg-transparent
+           hover:bg-primary-50 hover:border-primary-700 active:scale-[0.97]
+           focus-visible:ring-2 focus-visible:ring-primary-400 focus-visible:ring-offset-2
            transition-all duration-150 disabled:opacity-50 disabled:pointer-events-none;
   }
 
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl
-           text-charcoal font-medium text-sm
-           hover:bg-surface-2 active:scale-[0.98]
+           text-charcoal font-medium text-sm bg-transparent
+           hover:bg-surface-2 hover:text-primary-700 active:scale-[0.97]
            transition-all duration-150;
   }
 
-  /* Cards */
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl
+           font-semibold text-sm text-white
+           bg-gradient-to-r from-primary-600 via-primary-500 to-primary-700
+           hover:from-primary-700 hover:via-primary-600 hover:to-primary-800
+           active:scale-[0.97] shadow-sm hover:shadow-md
+           transition-all duration-200;
+  }
+
+  /* ── Cards ─────────────────────────────── */
   .card {
-    @apply bg-white rounded-2xl shadow-card border border-gray-100
-           transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5;
+    @apply bg-white rounded-2xl shadow-card border border-primary-100/60
+           transition-all duration-200
+           hover:shadow-card-hover hover:-translate-y-0.5 hover:border-primary-200/80;
   }
 
   .card-static {
-    @apply bg-white rounded-2xl shadow-card border border-gray-100;
+    @apply bg-white rounded-2xl shadow-card border border-primary-100/60;
   }
 
-  /* Forms */
+  .card-gold {
+    @apply bg-white rounded-2xl border-2 border-primary-600/30 shadow-card
+           hover:border-primary-500 hover:shadow-card-hover hover:-translate-y-0.5
+           transition-all duration-200;
+  }
+
+  /* ── Forms ─────────────────────────────── */
   .input {
     @apply w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white
            text-charcoal placeholder:text-muted text-sm
-           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent
+           focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-400
+           hover:border-primary-300
            transition-all duration-150;
   }
 
-  /* Badges */
+  /* ── Badge ─────────────────────────────── */
   .badge {
     @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium;
   }
 
-  /* Typography */
+  .badge-gold {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold
+           bg-primary-100 text-primary-800 border border-primary-200;
+  }
+
+  /* ── Typography ─────────────────────────── */
   .section-title {
     @apply text-2xl sm:text-3xl font-semibold tracking-tight text-charcoal;
   }
 
-  /* Navigation */
-  .nav-mobile-link {
-    @apply block py-2 text-sm font-medium text-charcoal hover:text-primary-700 transition-colors;
+  .section-title-gold {
+    @apply text-2xl sm:text-3xl font-bold tracking-tight;
+    background: linear-gradient(135deg, #8a6028 0%, #b5813b 50%, #d9983a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  /* Progress bar - used for subscription usage */
+  /* ── Navigation ─────────────────────────── */
+  .nav-mobile-link {
+    @apply block py-2 px-3 rounded-xl text-sm font-medium text-charcoal
+           hover:text-primary-700 hover:bg-primary-50 transition-colors;
+  }
+
+  /* ── Progress ─────────────────────────── */
   .progress-track {
     @apply h-2 bg-gray-200 rounded-full overflow-hidden;
   }
 
   .progress-fill {
-    @apply h-full bg-primary-500 rounded-full transition-all duration-300;
+    @apply h-full rounded-full transition-all duration-500;
+    background: linear-gradient(90deg, #b5813b, #d9983a);
+  }
+
+  /* ── Blog card ─────────────────────────── */
+  .blog-card-thumb {
+    @apply h-40 flex items-center justify-center;
+    background: linear-gradient(135deg, #fdf8f0 0%, #f7e8cc 100%);
+  }
+
+  .blog-card-emoji {
+    @apply text-5xl select-none;
+  }
+
+  /* ── Pricing Section ─────────────────────────────── */
+  .pricing-section {
+    @apply py-16 bg-surface-2;
+  }
+
+  .pricing-main-title {
+    @apply text-3xl sm:text-4xl font-bold text-charcoal mb-4;
+  }
+
+  .pricing-title-accent {
+    @apply text-primary-600;
+  }
+
+  .pricing-subtitle {
+    @apply text-muted text-sm sm:text-base max-w-2xl mx-auto leading-relaxed;
+  }
+
+  .pricing-toggle-row {
+    @apply flex justify-center mb-8;
+  }
+
+  .pricing-toggle {
+    @apply inline-flex bg-white border border-primary-200 rounded-2xl p-1 gap-1 shadow-sm;
+  }
+
+  .pricing-toggle-btn-region {
+    @apply px-6 py-2 rounded-xl text-sm font-medium transition-all text-muted hover:text-charcoal;
+  }
+
+  .pricing-toggle-btn-active {
+    @apply bg-primary-600 text-white shadow-sm;
+  }
+
+  .pricing-region-label {
+    @apply text-xl font-bold text-charcoal tracking-widest mb-1;
+  }
+
+  .pricing-region-sub {
+    @apply text-sm text-muted;
   }
 }
 
-/* Utility classes */
+/* ── Skeleton ─────────────────────────────── */
 .skeleton {
-  @apply animate-pulse bg-gray-200 rounded-lg;
+  background: linear-gradient(90deg, #f0e8dc 25%, #e8d9c4 50%, #f0e8dc 75%);
+  background-size: 200% 100%;
+  @apply animate-shimmer rounded-lg;
 }
 
 .stars {
-  @apply flex items-center gap-0.5 text-accent-400;
+  @apply flex items-center gap-0.5 text-primary-500;
 }
 
-/* Leaflet map overrides */
+/* ── Leaflet ─────────────────────────────── */
 .leaflet-container {
   border-radius: 1rem;
   z-index: 0;
 }
 
-/* Animate fade-in for mobile menu */
+/* ── Animations ─────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-4px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -116,147 +224,25 @@
   animation: fadeIn 0.15s ease-out;
 }
 
-
-/* Blog card */
-.blog-card-thumb {
-  @apply h-40 bg-gradient-to-br from-primary-50 to-accent-100 flex items-center justify-center;
+/* Gold shimmer for skeleton */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
 }
 
-.blog-card-emoji {
-  @apply text-5xl select-none;
+.animate-shimmer {
+  animation: shimmer 1.5s infinite;
 }
 
-/* ─── Pricing Section ─────────────────────────────── */
-.pricing-section {
-  @apply py-20 bg-[#fdf6ee];
+/* Gradient text utility */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #8a6028 0%, #b5813b 50%, #d9983a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.pricing-main-title {
-  @apply text-3xl sm:text-4xl font-bold text-charcoal mb-4;
-}
-
-.pricing-title-accent {
-  @apply text-[#b5813b];
-}
-
-.pricing-subtitle {
-  @apply text-charcoal/70 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed;
-}
-
-/* Region toggle */
-.pricing-toggle-row {
-  @apply flex justify-center mb-8;
-}
-
-.pricing-toggle {
-  @apply inline-flex bg-white border border-[#d4a96a]/40 rounded-full p-1 gap-1 shadow-sm;
-}
-
-.pricing-toggle-btn-region {
-  @apply px-6 py-2 rounded-full text-sm font-medium transition-all text-charcoal/60 hover:text-charcoal;
-}
-
-.pricing-toggle-btn-active {
-  @apply bg-[#b5813b] text-white shadow-sm;
-}
-
-/* Region label */
-.pricing-region-label {
-  @apply text-xl font-bold text-charcoal tracking-widest mb-1;
-}
-
-.pricing-region-sub {
-  @apply text-sm text-charcoal/50;
-}
-
-/* Cards */
-.pricing-card {
-  @apply relative bg-white rounded-2xl border border-[#e8d5bc] shadow-md overflow-hidden flex flex-col transition-all duration-200 hover:shadow-lg;
-}
-
-.pricing-card-popular {
-  @apply border-[#b5813b] ring-2 ring-[#b5813b]/30;
-}
-
-.pricing-card-body {
-  @apply p-7 flex flex-col flex-1;
-}
-
-/* Ribbon */
-.pricing-ribbon {
-  @apply absolute top-0 right-0 w-28 h-28 overflow-hidden pointer-events-none;
-}
-
-.pricing-ribbon span {
-  @apply absolute text-[10px] font-bold text-white text-center leading-tight
-         rotate-45 top-7 right-[-18px] w-[110px] py-1.5;
-}
-
-.pricing-ribbon-popular span {
-  @apply bg-[#b5813b];
-}
-
-.pricing-ribbon-elite span {
-  @apply bg-[#8a6028];
-}
-
-/* Plan name & tagline */
-.pricing-plan-name {
-  @apply text-xl font-bold text-charcoal mb-1;
-}
-
-.pricing-plan-tagline {
-  @apply text-sm text-charcoal/50 mb-5 leading-snug;
-}
-
-/* Price */
-.pricing-price-row {
-  @apply flex items-end gap-0.5 mb-5;
-}
-
-.pricing-currency {
-  @apply text-xl font-bold text-charcoal mb-1.5;
-}
-
-.pricing-amount {
-  @apply text-5xl font-extrabold text-charcoal leading-none;
-}
-
-.pricing-period {
-  @apply text-sm text-charcoal/40 mb-1.5 ml-0.5;
-}
-
-.pricing-divider {
-  @apply border-t border-[#e8d5bc] mb-5;
-}
-
-/* Features */
-.pricing-features {
-  @apply space-y-2.5 mb-5;
-}
-
-.pricing-feature-item {
-  @apply flex items-start gap-2.5 text-sm text-charcoal/80;
-}
-
-.pricing-check-icon {
-  @apply w-4 h-4 text-[#b5813b] flex-shrink-0 mt-0.5;
-}
-
-/* Buttons */
-.pricing-toggle-btn {
-  @apply w-full flex items-center justify-center gap-1.5 text-sm font-medium
-         text-[#b5813b] hover:text-[#8a6028] py-2 transition-colors mb-3;
-}
-
-.pricing-cta-btn {
-  @apply w-full inline-flex items-center justify-center rounded-xl py-2.5
-         bg-[#b5813b] hover:bg-[#8a6028] text-white text-sm font-semibold
-         transition-colors mt-auto;
-}
-
-.pricing-view-all {
-  @apply inline-flex items-center gap-2 text-sm font-semibold text-[#b5813b]
-         hover:text-[#8a6028] border border-[#b5813b]/40 hover:border-[#b5813b]
-         px-6 py-2.5 rounded-xl transition-all;
+/* Hero gradient override for dark sections */
+.hero-gradient {
+  background: linear-gradient(135deg, #2e1f0a 0%, #4e3616 40%, #6b4a1e 100%);
 }

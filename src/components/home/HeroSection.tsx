@@ -23,7 +23,7 @@ export default function HeroSection({ categories }: { categories: Category[] }) 
   }
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white">
+    <section className="relative overflow-hidden hero-gradient text-white">
       <div className="absolute inset-0 opacity-[0.04]" aria-hidden="true">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>

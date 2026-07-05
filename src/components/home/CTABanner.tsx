@@ -2,7 +2,7 @@
 
 export default function CTABanner() {
   return (
-    <section className="bg-primary-700 text-white py-14">
+    <section className="py-14 hero-gradient text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">
           Join the Directory. Be Seen. Be Supported. Be SankofaX.
