@@ -1,6 +1,8 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-import { MapPin, BadgeCheck } from 'lucide-react'
+import { MapPin, BadgeCheck, ChevronLeft, ChevronRight } from 'lucide-react'
 import type { ListingCard as TListingCard } from '@/types'
 import StarRating from '@/components/ui/StarRating'
 import { cn } from '@/lib/utils'
@@ -10,20 +12,61 @@ interface Props {
   className?: string
 }
 
-const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="260" viewBox="0 0 400 260"%3E%3Crect width="400" height="260" fill="%23f0fdf4"/%3E%3Ctext x="200" y="140" font-family="system-ui" font-size="48" fill="%2316a34a" text-anchor="middle"%3E🌍%3C/text%3E%3C/svg%3E'
-
 export default function ListingCard({ listing, className }: Props) {
+  const images = listing.gallery_images?.length ? listing.gallery_images : []
+  const [idx, setIdx] = useState(0)
+
+  function prev(e: React.MouseEvent) {
+    e.preventDefault()
+    setIdx(i => (i - 1 + images.length) % images.length)
+  }
+  function next(e: React.MouseEvent) {
+    e.preventDefault()
+    setIdx(i => (i + 1) % images.length)
+  }
+
   return (
     <Link href={`/listing/${listing.slug}`} className={cn('card block overflow-hidden group', className)}>
-      {/* Image */}
+      {/* Image / Carousel */}
       <div className="relative h-48 bg-surface-2 overflow-hidden">
-        <Image
-          src={listing.cover_image ?? PLACEHOLDER}
-          alt={listing.title}
-          fill
-          className="object-cover group-hover:scale-[1.03] transition-transform duration-300"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
+        {images.length > 0 ? (
+          <img
+            src={images[idx]}
+            alt={`${listing.title} photo ${idx + 1}`}
+            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-5xl">🌍</div>
+        )}
+
+        {/* Carousel controls — only when multiple images */}
+        {images.length > 1 && (
+          <>
+            <button
+              onClick={prev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={next}
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Next image"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+              {images.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={e => { e.preventDefault(); setIdx(i) }}
+                  className={cn('w-1.5 h-1.5 rounded-full transition-colors', i === idx ? 'bg-white' : 'bg-white/40')}
+                />
+              ))}
+            </div>
+          </>
+        )}
         {listing.featured && (
           <div className="absolute top-3 left-3">
             <span className="badge bg-accent-500 text-white text-[10px] font-semibold tracking-wide uppercase shadow-sm">

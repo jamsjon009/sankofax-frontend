@@ -1,130 +1,159 @@
-﻿import Link from 'next/link'
-import { Calendar, Clock, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import { Calendar, Clock, ArrowRight, Search } from 'lucide-react'
+import { blog } from '@/lib/api'
+import type { BlogPost, BlogCategory } from '@/lib/api'
 
-const POSTS = [
-  {
-    slug: 'why-black-owned-businesses-need-a-global-presence',
-    title: 'Why Black-Owned Businesses Need a Global Presence',
-    excerpt: 'In an increasingly connected world, limiting your business to local markets means leaving money and opportunity on the table. Here is how SankofaX helps you go global.',
-    category: 'Business Growth',
-    date: 'June 15, 2025',
-    readTime: '5 min read',
-  },
-  {
-    slug: 'the-power-of-the-diaspora-economy',
-    title: 'The Power of the Diaspora Economy',
-    excerpt: 'The African diaspora represents a combined spending power of over $1.5 trillion. Understanding how to tap into this community can transform your business.',
-    category: 'Community',
-    date: 'June 8, 2025',
-    readTime: '7 min read',
-  },
-  {
-    slug: 'how-to-optimize-your-sankofax-listing',
-    title: 'How to Optimize Your SankofaX Listing for Maximum Visibility',
-    excerpt: 'A complete listing gets 10x more views than an incomplete one. Follow these tips to make sure your business stands out in the directory.',
-    category: 'Tips & Guides',
-    date: 'May 28, 2025',
-    readTime: '4 min read',
-  },
-  {
-    slug: 'subscription-tiers-explained',
-    title: 'SankofaX Subscription Tiers Explained: Which Plan is Right for You?',
-    excerpt: 'From our free listing to Directory Elite, every plan is designed to meet businesses where they are. Here is a breakdown to help you choose.',
-    category: 'Platform Updates',
-    date: 'May 20, 2025',
-    readTime: '6 min read',
-  },
-  {
-    slug: 'spotlight-black-tech-founders',
-    title: 'Spotlight: Black Tech Founders Changing the Game',
-    excerpt: 'We sat down with five Black tech entrepreneurs listed on SankofaX to hear their stories, challenges, and advice for aspiring founders.',
-    category: 'Spotlight',
-    date: 'May 12, 2025',
-    readTime: '8 min read',
-  },
-  {
-    slug: 'fair-pricing-global-south',
-    title: 'Fair Pricing for the Global South: Our Commitment to Accessibility',
-    excerpt: 'SankofaX offers reduced pricing for businesses in Africa, the Caribbean, and Latin America. Here is why we believe accessibility is non-negotiable.',
-    category: 'Community',
-    date: 'May 5, 2025',
-    readTime: '4 min read',
-  },
-]
+export const revalidate = 60
 
-const CATEGORIES = ['All', 'Business Growth', 'Community', 'Tips & Guides', 'Platform Updates', 'Spotlight']
+type Props = {
+  searchParams: Promise<{ q?: string; category?: string }>
+}
 
-export default function BlogPage() {
+async function getData(q?: string, category?: string) {
+  const [postsRes, cats] = await Promise.all([
+    blog.list({ search: q, category__slug: category }).catch(() => ({ results: [] as BlogPost[], count: 0, next: null, previous: null })),
+    blog.categories().catch(() => [] as BlogCategory[]),
+  ])
+  return {
+    posts: Array.isArray(postsRes) ? postsRes : postsRes.results ?? [],
+    categories: cats,
+  }
+}
+
+function formatDate(dateStr: string | null) {
+  if (!dateStr) return ''
+  return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+}
+
+export default async function BlogPage({ searchParams }: Props) {
+  const { q, category } = await searchParams
+  const { posts, categories } = await getData(q, category)
+
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <section className="bg-gradient-to-br from-primary-950 to-primary-800 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-3">SankofaX Blog</h1>
-          <p className="text-white/70 max-w-xl">
-            Insights, stories, and guides for Black and African-owned businesses and the diaspora community.
-          </p>
-        </div>
-      </section>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Category filter */}
-        <div className="flex flex-wrap gap-2 mb-10">
-          {CATEGORIES.map(cat => (
-            <span
-              key={cat}
-              className={`px-4 py-1.5 rounded-full text-sm border cursor-pointer transition-colors ${
-                cat === 'All'
-                  ? 'bg-primary-700 text-white border-primary-700'
-                  : 'border-gray-200 text-muted hover:border-primary-300'
+      {/* Header */}
+      <div className="text-center mb-10">
+        <p className="text-primary-600 text-sm font-semibold uppercase tracking-widest mb-2">Our Blog</p>
+        <h1 className="text-4xl sm:text-5xl font-bold text-charcoal mb-4">Stories, Guides &amp; Insights</h1>
+        <p className="text-muted text-lg max-w-xl mx-auto">
+          From business tips to diaspora culture — everything you need to grow and connect.
+        </p>
+      </div>
+
+      {/* Search bar */}
+      <form action="/blog" method="get" className="max-w-lg mx-auto mb-8">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+          <input
+            name="q"
+            type="search"
+            defaultValue={q ?? ''}
+            placeholder="Search articles, topics, tags..."
+            className="input w-full pl-10 pr-20 py-3"
+          />
+          {category && <input type="hidden" name="category" value={category} />}
+          <button
+            type="submit"
+            className="absolute right-2 top-1/2 -translate-y-1/2 btn-primary py-1.5 px-4 text-sm rounded-lg"
+          >
+            Search
+          </button>
+        </div>
+      </form>
+
+      {/* Category filters */}
+      {categories.length > 0 && (
+        <div className="flex gap-2 flex-wrap justify-center mb-10">
+          <Link
+            href="/blog"
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              !category && !q
+                ? 'bg-primary-700 text-white'
+                : 'border border-gray-200 text-muted hover:border-primary-300 hover:text-primary-700'
+            }`}
+          >
+            All
+          </Link>
+          {categories.map(cat => (
+            <Link
+              key={cat.slug}
+              href={`/blog?category=${cat.slug}`}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                category === cat.slug
+                  ? 'bg-primary-700 text-white'
+                  : 'border border-gray-200 text-muted hover:border-primary-300 hover:text-primary-700'
               }`}
             >
-              {cat}
-            </span>
+              {cat.name} <span className="opacity-60">({cat.post_count})</span>
+            </Link>
           ))}
         </div>
+      )}
 
-        {/* Posts grid */}
+      {/* Search result label */}
+      {(q || category) && (
+        <div className="flex items-center justify-between mb-6">
+          <p className="text-sm text-muted">
+            {posts.length} result{posts.length !== 1 ? 's' : ''}
+            {q && <> for <strong className="text-charcoal">&ldquo;{q}&rdquo;</strong></>}
+            {category && (
+              <> in <strong className="text-charcoal">{categories.find(c => c.slug === category)?.name ?? category}</strong></>
+            )}
+          </p>
+          <Link href="/blog" className="text-xs text-primary-700 hover:underline">Clear filters</Link>
+        </div>
+      )}
+
+      {/* Posts grid */}
+      {posts.length === 0 ? (
+        <div className="text-center py-20">
+          <div className="text-5xl mb-4">🔍</div>
+          <p className="text-lg font-medium text-charcoal mb-1">No articles found</p>
+          <p className="text-sm text-muted mb-6">Try a different keyword or browse all posts.</p>
+          <Link href="/blog" className="btn-outline">Browse all posts</Link>
+        </div>
+      ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {POSTS.map(post => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className="card hover:shadow-md transition-shadow group overflow-hidden">
-              {/* Placeholder image area */}
-              <div className="h-40 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
-                <span className="text-4xl">
-                  {post.category === 'Business Growth' ? '📈' :
-                   post.category === 'Community' ? '🌍' :
-                   post.category === 'Tips & Guides' ? '💡' :
-                   post.category === 'Platform Updates' ? '🚀' : '✨'}
-                </span>
+          {posts.map((post: BlogPost) => (
+            <Link key={post.slug} href={`/blog/${post.slug}`} className="card group flex flex-col overflow-hidden">
+              <div className="blog-card-thumb bg-primary-50 flex items-center justify-center">
+                {post.cover_image ? (
+                  <img src={post.cover_image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                ) : (
+                  <span className="blog-card-emoji">✍️</span>
+                )}
               </div>
-              <div className="p-5">
-                <span className="badge bg-primary-50 text-primary-700 border border-primary-100 text-[10px] font-semibold">
-                  {post.category}
-                </span>
-                <h2 className="mt-3 font-semibold text-charcoal text-sm leading-snug group-hover:text-primary-700 transition-colors">
+
+              <div className="p-5 flex flex-col flex-1">
+                {post.category && (
+                  <span className="badge badge-gold mb-3 self-start">{post.category.name}</span>
+                )}
+                <h2 className="font-bold text-charcoal text-base leading-snug group-hover:text-primary-700 transition-colors mb-2">
                   {post.title}
                 </h2>
-                <p className="mt-2 text-xs text-muted leading-relaxed line-clamp-2">
-                  {post.excerpt}
-                </p>
+                <p className="text-muted text-sm leading-relaxed flex-1 line-clamp-3">{post.excerpt}</p>
+
                 <div className="mt-4 flex items-center justify-between text-xs text-muted">
                   <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      {post.date}
-                    </span>
+                    {post.published_at && (
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        {formatDate(post.published_at)}
+                      </span>
+                    )}
                     <span className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      {post.readTime}
+                      {post.read_time_minutes} min read
                     </span>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-primary-500 group-hover:translate-x-0.5 transition-transform" />
+                  <ArrowRight className="w-4 h-4 text-primary-600 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </Link>
           ))}
         </div>
-      </div>
+      )}
     </div>
   )
 }

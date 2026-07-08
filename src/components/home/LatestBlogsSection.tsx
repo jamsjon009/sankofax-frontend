@@ -1,37 +1,27 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
+import { blog, type BlogPost } from '@/lib/api'
 
-const POSTS = [
-  {
-    slug: 'why-black-owned-businesses-need-a-global-presence',
-    title: 'Why Black-Owned Businesses Need a Global Presence',
-    excerpt: 'In an increasingly connected world, limiting your business to local markets means leaving money and opportunity on the table.',
-    category: 'Business Growth',
-    date: 'June 15, 2025',
-    readTime: '5 min read',
-    emoji: '📈',
-  },
-  {
-    slug: 'the-power-of-the-diaspora-economy',
-    title: 'The Power of the Diaspora Economy',
-    excerpt: 'The African diaspora represents a combined spending power of over $1.5 trillion. Here is how to tap into this community.',
-    category: 'Community',
-    date: 'June 8, 2025',
-    readTime: '7 min read',
-    emoji: '🌍',
-  },
-  {
-    slug: 'how-to-optimize-your-sankofax-listing',
-    title: 'How to Optimize Your SankofaX Listing for Maximum Visibility',
-    excerpt: 'A complete listing gets 10x more views than an incomplete one. Follow these tips to make your business stand out.',
-    category: 'Tips & Guides',
-    date: 'May 28, 2025',
-    readTime: '4 min read',
-    emoji: '💡',
-  },
-]
+function formatDate(dateStr: string | null) {
+  if (!dateStr) return ''
+  return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+}
 
-export default function LatestBlogsSection() {
+const FALLBACK_EMOJIS = ['📈', '🌍', '💡', '✨', '🚀', '🤝']
+
+export default async function LatestBlogsSection() {
+  let posts: BlogPost[] = []
+  try {
+    const res = await blog.list()
+    const all = Array.isArray(res) ? res : res.results ?? []
+    posts = all.slice(0, 3)
+  } catch {
+    // silently use empty array; section still renders
+  }
+
+  // If no API posts, render nothing (avoids stale static data)
+  if (posts.length === 0) return null
+
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="flex items-end justify-between mb-10">
@@ -46,19 +36,27 @@ export default function LatestBlogsSection() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {POSTS.map(post => (
+        {posts.map((post, i) => (
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
             className="card overflow-hidden group"
           >
-            <div className="blog-card-thumb">
-              <span className="blog-card-emoji">{post.emoji}</span>
-            </div>
+            {post.cover_image ? (
+              <div className="h-40 overflow-hidden">
+                <img src={post.cover_image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+              </div>
+            ) : (
+              <div className="blog-card-thumb">
+                <span className="blog-card-emoji">{FALLBACK_EMOJIS[i % FALLBACK_EMOJIS.length]}</span>
+              </div>
+            )}
             <div className="p-5">
-              <span className="badge bg-primary-50 text-primary-700 border border-primary-100 text-[10px] font-semibold">
-                {post.category}
-              </span>
+              {post.category && (
+                <span className="badge bg-primary-50 text-primary-700 border border-primary-100 text-[10px] font-semibold">
+                  {post.category.name}
+                </span>
+              )}
               <h3 className="mt-3 font-semibold text-charcoal text-sm leading-snug group-hover:text-primary-700 transition-colors line-clamp-2">
                 {post.title}
               </h3>
@@ -66,13 +64,15 @@ export default function LatestBlogsSection() {
                 {post.excerpt}
               </p>
               <div className="mt-4 flex items-center gap-4 text-xs text-muted">
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
-                  {post.date}
-                </span>
+                {post.published_at && (
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-3 h-3" />
+                    {formatDate(post.published_at)}
+                  </span>
+                )}
                 <span className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
-                  {post.readTime}
+                  {post.read_time_minutes} min read
                 </span>
               </div>
             </div>

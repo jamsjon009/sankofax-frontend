@@ -1,20 +1,6 @@
 import Link from 'next/link'
 import type { Category } from '@/types'
 
-// Lucide icon name → emoji fallback for SSR simplicity
-const ICON_MAP: Record<string, string> = {
-  'utensils': '🍽️',
-  'heart-pulse': '💚',
-  'stethoscope': '🏥',
-  'calendar': '🗓️',
-  'plane': '✈️',
-  'palette': '🎨',
-  'brain': '🧠',
-  'shopping-bag': '🛍️',
-  'laptop': '💻',
-  'sparkles': '✨',
-}
-
 export default function CategoryGrid({ categories }: { categories: Category[] }) {
   if (!categories.length) return null
 
@@ -30,12 +16,22 @@ export default function CategoryGrid({ categories }: { categories: Category[] })
           <Link
             key={cat.slug}
             href={`/category/${cat.slug}`}
-            className="group flex flex-col items-center gap-3 p-5 rounded-2xl bg-white border border-gray-100 shadow-card hover:shadow-card-hover hover:-translate-y-1 hover:border-primary-200 transition-all duration-200 text-center"
+            className="group flex flex-col items-center rounded-2xl bg-white border border-gray-100 shadow-card hover:shadow-card-hover hover:-translate-y-1 hover:border-primary-200 transition-all duration-200 text-center overflow-hidden"
           >
-            <span className="text-3xl" role="img" aria-label={cat.name}>
-              {ICON_MAP[cat.icon] ?? '🌍'}
-            </span>
-            <span className="text-sm font-medium text-charcoal group-hover:text-primary-700 leading-snug line-clamp-2">
+            {/* Image */}
+            <div className="w-full h-28 bg-surface-2 overflow-hidden">
+              {cat.cover_image ? (
+                <img
+                  src={cat.cover_image}
+                  alt={cat.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-4xl">🌍</div>
+              )}
+            </div>
+            {/* Name */}
+            <span className="px-3 py-3 text-sm font-medium text-charcoal group-hover:text-primary-700 leading-snug line-clamp-2">
               {cat.name}
             </span>
           </Link>

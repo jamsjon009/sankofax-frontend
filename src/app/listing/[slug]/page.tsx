@@ -7,12 +7,13 @@ import ListingDetailClient from './ListingDetailClient'
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://diaspora-directory.com'
 
 interface Props {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
-    const listing = await listings.get(params.slug)
+    const { slug } = await params
+    const listing = await listings.get(slug)
     return {
       title: `${listing.title} | Diaspora Directory`,
       description: listing.short_description,
@@ -85,10 +86,11 @@ function buildJsonLd(listing: Awaited<ReturnType<typeof listings.get>>) {
 }
 
 export default async function ListingPage({ params }: Props) {
-  const listing = await listings.get(params.slug).catch(() => null)
+  const { slug } = await params
+  const listing = await listings.get(slug).catch(() => null)
   if (!listing) notFound()
 
-  const reviewData = await listings.reviews(params.slug).catch(() => ({ results: [] }))
+  const reviewData = await listings.reviews(slug).catch(() => ({ results: [] }))
   const jsonLd = buildJsonLd(listing)
 
   return (

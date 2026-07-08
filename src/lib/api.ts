@@ -39,7 +39,7 @@ function authHeader(token: string) {
 
 // Auth
 export const auth = {
-  register: (data: { email: string; password: string; password2: string; region?: string }) =>
+  register: (data: { email: string; password: string; password2: string; region?: string; country?: string; account_type?: string }) =>
     request<{ access: string; refresh: string; user: User }>('/auth/register/', { method: 'POST', body: JSON.stringify(data) }),
 
   login: (email: string, password: string) =>
@@ -47,6 +47,18 @@ export const auth = {
 
   me: (token: string) =>
     request<User>('/auth/me/', { headers: { Authorization: `Bearer ${token}` } }),
+
+  verifyEmail: (token: string) =>
+    request<{ detail: string }>('/auth/verify-email/', { method: 'POST', body: JSON.stringify({ token }) }),
+
+  resendVerification: (email: string) =>
+    request<{ detail: string }>('/auth/resend-verification/', { method: 'POST', body: JSON.stringify({ email }) }),
+
+  forgotPassword: (email: string) =>
+    request<{ detail: string }>('/auth/forgot-password/', { method: 'POST', body: JSON.stringify({ email }) }),
+
+  resetPassword: (token: string, password: string, password2: string) =>
+    request<{ detail: string }>('/auth/reset-password/', { method: 'POST', body: JSON.stringify({ token, password, password2 }) }),
 }
 
 // Categories
@@ -149,6 +161,32 @@ export const listings = {
     request<PaginatedResponse<Review>>(`/listings/${listingSlug}/reviews/`),
 }
 
+// Site Settings
+export interface SiteSettings {
+  site_name: string
+  meta_description: string
+  footer_text: string
+  contact_email: string
+  contact_phone: string
+  contact_address: string
+  response_time: string
+  map_embed_code: string
+  instagram_url: string
+  facebook_url: string
+  twitter_url: string
+  linkedin_url: string
+  youtube_url: string
+  tiktok_url: string
+  instagram_embed_code: string
+  google_tag_manager_id: string
+  google_analytics_id: string
+  google_search_console_code: string
+}
+
+export const siteSettings = {
+  get: () => request<SiteSettings>('/site-settings/'),
+}
+
 // Plans
 export const plans = {
   list: (region?: string) => {
@@ -163,6 +201,45 @@ export const companies = {
   get: (slug: string) => request<CompanyProfile>(`/companies/${slug}/`),
 }
 
+// Testimonials
+export interface Testimonial {
+  id: number
+  body: string
+  role: string
+  author: string
+  initials: string
+}
+
+export interface MyTestimonial {
+  id: number
+  body: string
+  role: string
+  status: 'pending' | 'approved' | 'rejected'
+  created_at: string
+}
+
+export const testimonials = {
+  list: () => request<Testimonial[]>('/testimonials/'),
+  my: (token: string) =>
+    request<MyTestimonial | null>('/testimonials/my/', { headers: authHeader(token) }),
+  submit: (token: string, body: string, role: string) =>
+    request<{ id: number; status: string }>('/testimonials/my/', {
+      method: 'POST',
+      headers: authHeader(token),
+      body: JSON.stringify({ body, role }),
+    }),
+}
+
+// FAQs
+export interface FAQ {
+  question: string
+  answer: string
+}
+
+export const faqs = {
+  list: () => request<FAQ[]>('/faqs/'),
+}
+
 // Newsletter
 export const newsletter = {
   subscribe: (email: string, source = 'homepage') =>
@@ -173,4 +250,45 @@ export const newsletter = {
 export const contact = {
   send: (data: { name: string; email: string; message: string }) =>
     request('/contact/', { method: 'POST', body: JSON.stringify(data) }),
+}
+
+// Blog
+export interface BlogPost {
+  id: string
+  title: string
+  slug: string
+  author_name: string
+  category: { id: number; name: string; slug: string; description: string; post_count: number } | null
+  excerpt: string
+  cover_image: string | null
+  tags_list: string[]
+  is_featured: boolean
+  read_time_minutes: number
+  view_count: number
+  published_at: string | null
+  content?: string
+  meta_title?: string
+  meta_description?: string
+  og_image?: string | null
+}
+
+export interface BlogCategory {
+  id: number
+  name: string
+  slug: string
+  description: string
+  post_count: number
+}
+
+export const blog = {
+  list: (params?: { category__slug?: string; featured?: boolean; search?: string }) => {
+    const q = new URLSearchParams()
+    if (params?.category__slug) q.set('category__slug', params.category__slug)
+    if (params?.featured) q.set('is_featured', 'true')
+    if (params?.search) q.set('search', params.search)
+    const qs = q.toString() ? `?${q}` : ''
+    return request<PaginatedResponse<BlogPost>>(`/blog/${qs}`)
+  },
+  get: (slug: string) => request<BlogPost>(`/blog/${slug}/`),
+  categories: () => request<BlogCategory[]>('/blog/categories/'),
 }

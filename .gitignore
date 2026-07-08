@@ -16,3 +16,6 @@ npm-debug.log*
 yarn-debug.log*
 
 coverage/
+
+# Claude Code local config
+.claude/

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, lazy, Suspense } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import {
   MapPin, Phone, Globe, Mail, MessageSquare, BadgeCheck,
@@ -14,7 +13,6 @@ import { mediaUrl } from '@/lib/utils'
 const SingleListingMap = lazy(() => import('@/components/map/SingleListingMap'))
 
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500"%3E%3Crect width="800" height="500" fill="%23f0fdf4"/%3E%3Ctext x="400" y="270" font-family="system-ui" font-size="80" fill="%2316a34a" text-anchor="middle"%3E🌍%3C/text%3E%3C/svg%3E'
 
 export default function ListingDetailClient({
   listing,
@@ -24,9 +22,7 @@ export default function ListingDetailClient({
   reviews: Review[]
 }) {
   const [imgIdx, setImgIdx] = useState(0)
-  const images = listing.gallery_images.length
-    ? listing.gallery_images.map(g => g.image)
-    : [PLACEHOLDER]
+  const images = listing.gallery_images.map(g => g.image)
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -46,13 +42,15 @@ export default function ListingDetailClient({
         <div className="lg:col-span-2 space-y-8">
           {/* Gallery */}
           <div className="relative rounded-2xl overflow-hidden bg-surface-2 aspect-[16/9]">
-            <Image
-              src={images[imgIdx]}
-              alt={`${listing.title} photo ${imgIdx + 1}`}
-              fill
-              className="object-cover"
-              priority
-            />
+            {images.length > 0 ? (
+              <img
+                src={images[imgIdx]}
+                alt={`${listing.title} photo ${imgIdx + 1}`}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-7xl">🌍</div>
+            )}
             {images.length > 1 && (
               <>
                 <button
@@ -226,8 +224,8 @@ export default function ListingDetailClient({
             <h3 className="font-semibold text-charcoal text-sm mb-3">Business</h3>
             <div className="flex items-center gap-3">
               {listing.company_logo ? (
-                <div className="w-10 h-10 rounded-xl overflow-hidden relative bg-surface-2 flex-shrink-0">
-                  <Image src={listing.company_logo} alt={listing.company_name} fill className="object-cover" />
+                <div className="w-10 h-10 rounded-xl overflow-hidden bg-surface-2 flex-shrink-0">
+                  <img src={listing.company_logo} alt={listing.company_name} className="w-full h-full object-cover" />
                 </div>
               ) : (
                 <div className="w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center flex-shrink-0">

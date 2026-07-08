@@ -16,6 +16,7 @@ export interface Category {
   icon: string
   description: string
   listing_type: 'business' | 'event' | 'product'
+  cover_image: string | null
   subcategories: Category[]
 }
 
@@ -42,9 +43,10 @@ export interface ListingCard {
   company_name: string
   company_verified: boolean
   cover_image: string | null
+  gallery_images: string[]
 }
 
-export interface ListingDetail extends ListingCard {
+export interface ListingDetail extends Omit<ListingCard, 'gallery_images'> {
   full_description: string
   listing_status: string
   address_line: string
