@@ -47,6 +47,8 @@ export interface ListingCard {
   review_count: number
   price_range: string
   featured: boolean
+  business_type: string
+  business_type_display: string
   category_name: string
   category_slug: string
   company_name: string

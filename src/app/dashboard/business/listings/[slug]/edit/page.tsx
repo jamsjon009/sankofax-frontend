@@ -30,6 +30,7 @@ const COUNTRIES = [
 
 const schema = z.object({
   category: z.coerce.number().min(1, 'Select a category'),
+  business_type: z.string().optional(),
   title: z.string().min(3).max(200),
   short_description: z.string().min(10).max(300),
   full_description: z.string().min(20),
@@ -91,6 +92,7 @@ export default function EditListingPage() {
         setAllAmenities(Array.isArray(amsData) ? amsData : [])
         reset({
           category: listing.category?.id ?? listing.category,
+          business_type: listing.business_type ?? 'service',
           title: listing.title,
           short_description: listing.short_description,
           full_description: listing.full_description,
@@ -198,6 +200,16 @@ export default function EditListingPage() {
                 ))}
               </select>
               {errors.category && <p className="text-red-600 text-xs mt-1">{errors.category.message}</p>}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-charcoal mb-1.5">Business Type *</label>
+              <select {...register('business_type')} className="input">
+                <option value="product">Product-based</option>
+                <option value="service">Service-based</option>
+                <option value="both">Product &amp; Service</option>
+                <option value="nonprofit">Nonprofit / Community</option>
+              </select>
             </div>
 
             <div>

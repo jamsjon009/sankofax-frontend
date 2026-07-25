@@ -33,6 +33,7 @@ const schema = z.object({
   company: z.string().uuid('Select a company'),
   // Step 2
   category: z.coerce.number().min(1, 'Select a category'),
+  business_type: z.string().optional(),
   title: z.string().min(3).max(200),
   short_description: z.string().min(10).max(300),
   full_description: z.string().min(20),
@@ -76,6 +77,7 @@ export default function NewListingPage() {
   const methods = useForm<ListingFormData>({
     resolver: zodResolver(schema),
     mode: 'onTouched',
+    defaultValues: { business_type: 'service' },
   })
 
   useEffect(() => {

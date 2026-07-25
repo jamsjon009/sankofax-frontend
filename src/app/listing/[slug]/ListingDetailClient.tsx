@@ -101,6 +101,11 @@ export default function ListingDetailClient({
                   {listing.price_range && (
                     <span className="text-sm text-muted">{listing.price_range}</span>
                   )}
+                  {listing.business_type_display && (
+                    <span className="badge bg-surface-2 text-charcoal border border-gray-100 text-xs">
+                      {listing.business_type_display}
+                    </span>
+                  )}
                   <div className="flex items-center gap-1 text-sm text-muted">
                     <MapPin className="w-3.5 h-3.5" />
                     {listing.city}, {listing.country}

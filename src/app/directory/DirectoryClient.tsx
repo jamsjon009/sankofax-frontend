@@ -11,6 +11,12 @@ import { cn } from '@/lib/utils'
 const ListingsMap = lazy(() => import('@/components/map/ListingsMap'))
 
 const PRICE_RANGES = ['$', '$$', '$$$', '$$$$']
+const BUSINESS_TYPES = [
+  { value: 'product', label: 'Product-based' },
+  { value: 'service', label: 'Service-based' },
+  { value: 'both', label: 'Product & Service' },
+  { value: 'nonprofit', label: 'Nonprofit / Community' },
+]
 const SORT_OPTIONS = [
   { value: '-avg_rating', label: 'Top Rated' },
   { value: '-view_count', label: 'Most Viewed' },
@@ -262,6 +268,27 @@ function FilterSidebar({
               className={cn('w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors', filters.category === c.slug ? 'bg-primary-50 text-primary-700 font-medium' : 'text-muted hover:text-charcoal hover:bg-gray-50')}
             >
               {c.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-sm font-semibold text-charcoal mb-3">Business Type</h3>
+        <div className="space-y-1.5">
+          <button
+            onClick={() => onUpdate({ business_type: undefined })}
+            className={cn('w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors', !filters.business_type ? 'bg-primary-50 text-primary-700 font-medium' : 'text-muted hover:text-charcoal hover:bg-gray-50')}
+          >
+            All Types
+          </button>
+          {BUSINESS_TYPES.map(t => (
+            <button
+              key={t.value}
+              onClick={() => onUpdate({ business_type: filters.business_type === t.value ? undefined : t.value })}
+              className={cn('w-full text-left text-sm px-3 py-1.5 rounded-lg transition-colors', filters.business_type === t.value ? 'bg-primary-50 text-primary-700 font-medium' : 'text-muted hover:text-charcoal hover:bg-gray-50')}
+            >
+              {t.label}
             </button>
           ))}
         </div>

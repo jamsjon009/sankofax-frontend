@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 interface SearchParams {
   q?: string
   category?: string
+  business_type?: string
   city?: string
   country?: string
   price_range?: string
@@ -30,6 +31,7 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
     listings.list({
       q: sp.q,
       category: sp.category,
+      business_type: sp.business_type,
       city: sp.city,
       country: sp.country,
       price_range: sp.price_range,

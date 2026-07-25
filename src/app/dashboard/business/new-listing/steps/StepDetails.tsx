@@ -50,6 +50,17 @@ export default function StepDetails({
         {errors.category && <p className="text-red-600 text-xs mt-1">{errors.category.message}</p>}
       </div>
 
+      {/* Business type */}
+      <div>
+        <label className="block text-sm font-medium text-charcoal mb-1.5">Business Type *</label>
+        <select {...register('business_type')} className="input">
+          <option value="product">Product-based</option>
+          <option value="service">Service-based</option>
+          <option value="both">Product &amp; Service</option>
+          <option value="nonprofit">Nonprofit / Community</option>
+        </select>
+      </div>
+
       {/* Title */}
       <div>
         <label className="block text-sm font-medium text-charcoal mb-1.5">Listing Title *</label>
