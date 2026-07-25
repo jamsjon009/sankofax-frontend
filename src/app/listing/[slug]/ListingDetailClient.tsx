@@ -103,6 +103,21 @@ export default function ListingDetailClient({
                     {listing.city}, {listing.country}
                   </div>
                 </div>
+                {listing.badges?.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {listing.badges.map(b => (
+                      <span
+                        key={b.slug}
+                        className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium border"
+                        style={{ color: b.color || '#555', borderColor: (b.color || '#999') + '55', backgroundColor: (b.color || '#999') + '12' }}
+                        title={b.description || b.name}
+                      >
+                        {b.icon && <span aria-hidden>{b.icon}</span>}
+                        {b.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="flex gap-2 flex-shrink-0">
                 <button className="btn-ghost p-2.5 rounded-xl border border-gray-200" aria-label="Save">

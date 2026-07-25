@@ -104,6 +104,28 @@ export default function ListingCard({ listing, className }: Props) {
           {listing.short_description}
         </p>
 
+        {/* Ownership / identity badges */}
+        {listing.badges?.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-1">
+            {listing.badges.slice(0, 3).map(b => (
+              <span
+                key={b.slug}
+                className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium border"
+                style={{ color: b.color || '#555', borderColor: (b.color || '#999') + '55', backgroundColor: (b.color || '#999') + '12' }}
+                title={b.name}
+              >
+                {b.icon && <span aria-hidden>{b.icon}</span>}
+                {b.name}
+              </span>
+            ))}
+            {listing.badges.length > 3 && (
+              <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium text-muted bg-surface-2 border border-gray-200">
+                +{listing.badges.length - 3}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Footer row */}
         <div className="mt-3 flex items-center justify-between">
           <div className="flex items-center gap-1 text-muted text-xs">

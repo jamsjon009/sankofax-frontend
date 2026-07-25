@@ -3,7 +3,7 @@
 import { useState, useCallback, useTransition, lazy, Suspense } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { Search, SlidersHorizontal, MapPin, X, ChevronLeft, ChevronRight, Map, Grid3X3 } from 'lucide-react'
-import type { Category, PaginatedResponse, ListingCard } from '@/types'
+import type { Category, PaginatedResponse, ListingCard, IdentityBadge } from '@/types'
 import ListingCardComponent from '@/components/listings/ListingCard'
 import ListingCardSkeleton from '@/components/listings/ListingCardSkeleton'
 import { cn } from '@/lib/utils'
@@ -20,11 +20,12 @@ const SORT_OPTIONS = [
 
 interface Props {
   categories: Category[]
+  badges: IdentityBadge[]
   data: PaginatedResponse<ListingCard>
   initialFilters: Record<string, string | undefined>
 }
 
-export default function DirectoryClient({ categories, data, initialFilters }: Props) {
+export default function DirectoryClient({ categories, badges, data, initialFilters }: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const [isPending, startTransition] = useTransition()
@@ -129,7 +130,7 @@ export default function DirectoryClient({ categories, data, initialFilters }: Pr
       <div className="flex gap-8">
         {/* Sidebar */}
         <aside className="w-64 flex-shrink-0 space-y-6 hidden lg:block">
-          <FilterSidebar categories={categories} filters={filters} onUpdate={updateFilters} />
+          <FilterSidebar categories={categories} badges={badges} filters={filters} onUpdate={updateFilters} />
         </aside>
 
         {/* Results */}
@@ -190,7 +191,7 @@ export default function DirectoryClient({ categories, data, initialFilters }: Pr
               <h2 className="font-semibold">Filters</h2>
               <button onClick={() => setSidebarOpen(false)}><X className="w-5 h-5" /></button>
             </div>
-            <FilterSidebar categories={categories} filters={filters} onUpdate={(u) => { updateFilters(u); setSidebarOpen(false) }} />
+            <FilterSidebar categories={categories} badges={badges} filters={filters} onUpdate={(u) => { updateFilters(u); setSidebarOpen(false) }} />
           </div>
         </div>
       )}
@@ -200,15 +201,51 @@ export default function DirectoryClient({ categories, data, initialFilters }: Pr
 
 function FilterSidebar({
   categories,
+  badges,
   filters,
   onUpdate,
 }: {
   categories: Category[]
+  badges: IdentityBadge[]
   filters: Record<string, string | undefined>
   onUpdate: (u: Record<string, string | undefined>) => void
 }) {
+  const selectedBadges = (filters.badges ?? '').split(',').filter(Boolean)
+  const toggleBadge = (slug: string) => {
+    const next = selectedBadges.includes(slug)
+      ? selectedBadges.filter(s => s !== slug)
+      : [...selectedBadges, slug]
+    onUpdate({ badges: next.length ? next.join(',') : undefined })
+  }
+
   return (
     <div className="space-y-6">
+      {badges.length > 0 && (
+        <div>
+          <h3 className="text-sm font-semibold text-charcoal mb-3">Ownership &amp; Identity</h3>
+          <div className="flex flex-wrap gap-2">
+            {badges.map(b => {
+              const active = selectedBadges.includes(b.slug)
+              return (
+                <button
+                  key={b.slug}
+                  onClick={() => toggleBadge(b.slug)}
+                  className={cn(
+                    'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs border transition-colors',
+                    active ? 'text-white border-transparent' : 'text-muted border-gray-200 hover:border-primary-300',
+                  )}
+                  style={active ? { backgroundColor: b.color || '#1F3A5F' } : undefined}
+                  title={b.description || b.name}
+                >
+                  {b.icon && <span aria-hidden>{b.icon}</span>}
+                  {b.name}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
       <div>
         <h3 className="text-sm font-semibold text-charcoal mb-3">Category</h3>
         <div className="space-y-1.5">

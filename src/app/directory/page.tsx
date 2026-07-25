@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { categories, listings } from '@/lib/api'
+import { categories, listings, badges } from '@/lib/api'
 import DirectoryClient from './DirectoryClient'
 
 export const metadata: Metadata = {
@@ -14,6 +14,7 @@ interface SearchParams {
   country?: string
   price_range?: string
   amenities?: string
+  badges?: string
   min_rating?: string
   featured?: string
   ordering?: string
@@ -23,8 +24,9 @@ interface SearchParams {
 export default async function DirectoryPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams
 
-  const [cats, data] = await Promise.all([
+  const [cats, badgeList, data] = await Promise.all([
     categories.list().catch(() => []),
+    badges.list().catch(() => []),
     listings.list({
       q: sp.q,
       category: sp.category,
@@ -32,6 +34,7 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
       country: sp.country,
       price_range: sp.price_range,
       amenities: sp.amenities,
+      badges: sp.badges,
       min_rating: sp.min_rating ? Number(sp.min_rating) : undefined,
       featured: sp.featured === 'true' ? true : undefined,
       ordering: sp.ordering,
@@ -39,5 +42,5 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
     }).catch(() => ({ count: 0, next: null, previous: null, results: [] })),
   ])
 
-  return <DirectoryClient categories={cats} data={data} initialFilters={sp as Record<string, string | undefined>} />
+  return <DirectoryClient categories={cats} badges={badgeList} data={data} initialFilters={sp as Record<string, string | undefined>} />
 }

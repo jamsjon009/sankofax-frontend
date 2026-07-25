@@ -27,6 +27,15 @@ export interface Amenity {
   icon: string
 }
 
+export interface IdentityBadge {
+  id: number
+  name: string
+  slug: string
+  icon: string
+  color: string
+  description?: string
+}
+
 export interface ListingCard {
   id: string
   slug: string
@@ -44,6 +53,7 @@ export interface ListingCard {
   company_verified: boolean
   cover_image: string | null
   gallery_images: string[]
+  badges: IdentityBadge[]
 }
 
 export interface ListingDetail extends Omit<ListingCard, 'gallery_images'> {
@@ -61,6 +71,7 @@ export interface ListingDetail extends Omit<ListingCard, 'gallery_images'> {
   opening_hours: Record<string, string>
   view_count: number
   amenities: Amenity[]
+  badges: IdentityBadge[]
   gallery_images: { id: number; image: string; caption: string; order: number }[]
   category: Category
   company_slug: string
@@ -120,5 +131,6 @@ export interface CompanyProfile {
   contact_email: string
   contact_phone: string
   is_verified: boolean
+  badges: IdentityBadge[]
   created_at: string
 }

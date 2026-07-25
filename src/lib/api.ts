@@ -1,6 +1,6 @@
 ﻿import type {
   Category, ListingCard, ListingDetail, Review, Plan,
-  PaginatedResponse, CompanyProfile, User, Amenity,
+  PaginatedResponse, CompanyProfile, User, Amenity, IdentityBadge,
 } from '@/types'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'
@@ -74,6 +74,12 @@ export const amenities = {
     .then(r => Array.isArray(r) ? r : (r.results ?? [])),
 }
 
+// Identity / ownership badges
+export const badges = {
+  list: () => request<IdentityBadge[] | { results: IdentityBadge[] }>('/badges/')
+    .then(r => Array.isArray(r) ? r : (r.results ?? [])),
+}
+
 // Authenticated listing CRUD
 export const myListings = {
   list: (token: string) =>
@@ -140,6 +146,7 @@ export interface ListingFilters {
   q?: string
   price_range?: string
   amenities?: string
+  badges?: string
   min_rating?: number
   featured?: boolean
   ordering?: string
