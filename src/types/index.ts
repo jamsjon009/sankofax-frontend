@@ -78,6 +78,7 @@ export interface ListingDetail extends Omit<ListingCard, 'gallery_images'> {
   category: Category
   company_slug: string
   company_logo: string | null
+  company_founder_story: string
   created_at: string
   published_at: string
 }
@@ -129,6 +130,7 @@ export interface CompanyProfile {
   founded_year: number | null
   company_size: string
   description: string
+  founder_story: string
   website: string
   contact_email: string
   contact_phone: string

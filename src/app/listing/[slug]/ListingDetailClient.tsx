@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {
   MapPin, Phone, Globe, Mail, MessageSquare, BadgeCheck,
   Clock, Share2, Heart, ChevronLeft, ChevronRight, Star,
-  Users, Handshake,
+  Users, Handshake, Sparkles,
 } from 'lucide-react'
 import type { ListingDetail, Review } from '@/types'
 import StarRating from '@/components/ui/StarRating'
@@ -145,6 +145,18 @@ export default function ListingDetailClient({
               {listing.full_description}
             </div>
           </div>
+
+          {/* Founder Story */}
+          {listing.company_founder_story && (
+            <div className="card p-6 bg-surface-2 border-l-4 border-primary-300">
+              <h2 className="text-lg font-semibold text-charcoal mb-3 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-primary-600" /> Founder Story
+              </h2>
+              <div className="text-sm text-charcoal leading-relaxed whitespace-pre-line italic">
+                {listing.company_founder_story}
+              </div>
+            </div>
+          )}
 
           {/* Amenities */}
           {listing.amenities.length > 0 && (

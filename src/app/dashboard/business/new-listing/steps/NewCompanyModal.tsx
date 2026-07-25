@@ -12,6 +12,7 @@ import type { CompanyProfile } from '@/types'
 const schema = z.object({
   company_name: z.string().min(2),
   description: z.string().optional(),
+  founder_story: z.string().optional(),
   website: z.string().url().optional().or(z.literal('')),
   contact_email: z.string().email().optional().or(z.literal('')),
   contact_phone: z.string().optional(),
@@ -71,6 +72,13 @@ export default function NewCompanyModal({
           <div>
             <label className="block text-sm font-medium text-charcoal mb-1.5">Short Description</label>
             <textarea {...register('description')} className="input min-h-[80px] resize-none" placeholder="What does your company do?" />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-charcoal mb-1.5">
+              Founder Story <span className="text-muted font-normal">(optional)</span>
+            </label>
+            <textarea {...register('founder_story')} className="input min-h-[80px] resize-none" placeholder="How and why did you start? Shown on your business profile." />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
