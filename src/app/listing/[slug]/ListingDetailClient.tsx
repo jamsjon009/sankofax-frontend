@@ -5,9 +5,11 @@ import Link from 'next/link'
 import {
   MapPin, Phone, Globe, Mail, MessageSquare, BadgeCheck,
   Clock, Share2, Heart, ChevronLeft, ChevronRight, Star,
+  Users, Handshake,
 } from 'lucide-react'
 import type { ListingDetail, Review } from '@/types'
 import StarRating from '@/components/ui/StarRating'
+import ConnectModal from '@/components/connections/ConnectModal'
 import { mediaUrl } from '@/lib/utils'
 
 const SingleListingMap = lazy(() => import('@/components/map/SingleListingMap'))
@@ -22,6 +24,7 @@ export default function ListingDetailClient({
   reviews: Review[]
 }) {
   const [imgIdx, setImgIdx] = useState(0)
+  const [connectKind, setConnectKind] = useState<'connect' | 'collaborate' | null>(null)
   const images = listing.gallery_images.map(g => g.image)
 
   return (
@@ -180,6 +183,17 @@ export default function ListingDetailClient({
 
         {/* Sidebar */}
         <aside className="space-y-5">
+          {/* Connect & Collaborate */}
+          <div className="card p-5 space-y-2.5">
+            <h3 className="font-semibold text-charcoal text-sm">Get in touch</h3>
+            <button onClick={() => setConnectKind('connect')} className="btn-primary w-full justify-center gap-2">
+              <Users className="w-4 h-4" /> Connect
+            </button>
+            <button onClick={() => setConnectKind('collaborate')} className="btn-outline w-full justify-center gap-2">
+              <Handshake className="w-4 h-4" /> Collaborate
+            </button>
+          </div>
+
           {/* Contact card */}
           <div className="card p-5 space-y-3">
             <h3 className="font-semibold text-charcoal text-sm">Contact</h3>
@@ -261,6 +275,15 @@ export default function ListingDetailClient({
           </div>
         </aside>
       </div>
+
+      {connectKind && (
+        <ConnectModal
+          listingSlug={listing.slug}
+          businessName={listing.company_name}
+          kind={connectKind}
+          onClose={() => setConnectKind(null)}
+        />
+      )}
     </div>
   )
 }

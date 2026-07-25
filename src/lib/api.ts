@@ -247,6 +247,46 @@ export const faqs = {
   list: () => request<FAQ[]>('/faqs/'),
 }
 
+// Connections (Connect / Collaborate)
+export interface Connection {
+  id: string
+  kind: 'connect' | 'collaborate'
+  subject: string
+  message: string
+  status: 'pending' | 'accepted' | 'declined'
+  is_read: boolean
+  sender_name: string
+  sender_email: string
+  recipient_name: string
+  listing_title: string | null
+  listing_slug: string | null
+  company_name: string | null
+  created_at: string
+}
+
+export const connections = {
+  list: (token: string, box: 'inbox' | 'sent' = 'inbox') =>
+    request<PaginatedResponse<Connection> | Connection[]>(`/connections/?box=${box}`, { headers: authHeader(token) })
+      .then(r => (Array.isArray(r) ? r : (r.results ?? []))),
+
+  create: (token: string, data: { listing: string; kind: 'connect' | 'collaborate'; subject?: string; message?: string }) =>
+    request<Connection>('/connections/', {
+      method: 'POST',
+      headers: authHeader(token),
+      body: JSON.stringify(data),
+    }),
+
+  updateStatus: (token: string, id: string, data: { status?: 'accepted' | 'declined'; is_read?: boolean }) =>
+    request<Connection>(`/connections/${id}/`, {
+      method: 'PATCH',
+      headers: authHeader(token),
+      body: JSON.stringify(data),
+    }),
+
+  unreadCount: (token: string) =>
+    request<{ unread: number }>('/connections/unread-count/', { headers: authHeader(token) }),
+}
+
 // Newsletter
 export const newsletter = {
   subscribe: (email: string, source = 'homepage') =>
