@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { MapPin, BadgeCheck, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MapPin, ChevronLeft, ChevronRight } from 'lucide-react'
+import VerificationBadge from '@/components/ui/VerificationBadge'
 import type { ListingCard as TListingCard } from '@/types'
 import StarRating from '@/components/ui/StarRating'
 import { cn } from '@/lib/utils'
@@ -95,9 +96,12 @@ export default function ListingCard({ listing, className }: Props) {
           <h3 className="font-semibold text-charcoal text-base leading-snug line-clamp-1 flex-1">
             {listing.title}
           </h3>
-          {listing.company_verified && (
-            <BadgeCheck className="w-4 h-4 text-primary-600 flex-shrink-0 mt-0.5" />
-          )}
+          <VerificationBadge
+            level={listing.company_verification_level}
+            label={listing.company_verification_label}
+            showLabel={false}
+            className="flex-shrink-0 mt-0.5"
+          />
         </div>
 
         <p className="text-sm text-muted mt-1 line-clamp-2 leading-relaxed">

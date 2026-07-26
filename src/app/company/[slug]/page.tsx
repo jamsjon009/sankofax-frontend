@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { BadgeCheck, Globe, Mail, Phone, Calendar, Users, Instagram, Facebook, Twitter, Linkedin, Youtube, Sparkles } from 'lucide-react'
+import { Globe, Mail, Phone, Calendar, Users, Instagram, Facebook, Twitter, Linkedin, Youtube, Sparkles } from 'lucide-react'
+import VerificationBadge from '@/components/ui/VerificationBadge'
 import { companies, listings } from '@/lib/api'
 import ListingCard from '@/components/listings/ListingCard'
 
@@ -58,9 +59,12 @@ export default async function CompanyPage({ params }: Props) {
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl sm:text-3xl font-bold text-charcoal flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-charcoal flex items-center gap-2 flex-wrap">
               {company.company_name}
-              {company.is_verified && <BadgeCheck className="w-6 h-6 text-primary-600 flex-shrink-0" />}
+              <VerificationBadge
+                level={company.verification_level}
+                label={company.verification_label}
+              />
             </h1>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1.5 text-sm text-muted">
               {company.founded_year && (

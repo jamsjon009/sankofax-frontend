@@ -53,6 +53,8 @@ export interface ListingCard {
   category_slug: string
   company_name: string
   company_verified: boolean
+  company_verification_level: number
+  company_verification_label: string
   cover_image: string | null
   gallery_images: string[]
   badges: IdentityBadge[]
@@ -146,6 +148,46 @@ export interface CompanyProfile {
   contact_email: string
   contact_phone: string
   is_verified: boolean
+  verification_level: number
+  verification_label: string
+  verified_at: string | null
+  verification_expires_at: string | null
+  is_verification_expired: boolean
   badges: IdentityBadge[]
   created_at: string
+}
+
+// Verification tiers & workflow (item #12)
+export interface VerificationCheck {
+  key: string
+  label: string
+  passed: boolean
+}
+
+export interface VerificationRequest {
+  id: number
+  company_slug: string
+  company_name: string
+  requested_level: number
+  requested_level_label: string
+  status: 'pending' | 'approved' | 'rejected'
+  documents: string | null
+  note: string
+  admin_notes: string
+  reviewed_at: string | null
+  created_at: string
+}
+
+export interface VerificationStatus {
+  company_slug: string
+  company_name: string
+  verification_level: number
+  verification_label: string
+  verified_at: string | null
+  verification_expires_at: string | null
+  is_expired: boolean
+  automated_checks: VerificationCheck[]
+  passes_automated: boolean
+  has_pending: boolean
+  latest_request: VerificationRequest | null
 }

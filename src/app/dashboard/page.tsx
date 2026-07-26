@@ -17,14 +17,14 @@ export default function DashboardPage() {
         </div>
 
         {/* Verified CTA */}
-        {user && !user.is_verified && (
+        {user && user.role === 'business_owner' && (
           <div className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 flex items-start gap-3">
             <BadgeCheck className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-semibold text-amber-800">Get your Verified badge</p>
               <p className="text-xs text-amber-700 mt-0.5">
-                Upload ownership documents to receive the Verified badge on all your listings.{' '}
-                <Link href="/dashboard/profile" className="underline font-medium">Start verification →</Link>
+                Earn a verification badge on all your listings — from an instant automated check to full certification.{' '}
+                <Link href="/dashboard/verification" className="underline font-medium">Start verification →</Link>
               </p>
             </div>
           </div>

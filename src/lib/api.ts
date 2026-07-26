@@ -1,6 +1,7 @@
 ﻿import type {
   Category, ListingCard, ListingDetail, Review, Plan,
   PaginatedResponse, CompanyProfile, User, Amenity, IdentityBadge,
+  VerificationStatus, VerificationRequest,
 } from '@/types'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'
@@ -111,14 +112,33 @@ export const myListings = {
 
 // Authenticated company CRUD
 export const myCompanies = {
+  // The endpoint is paginated ({count, results}); unwrap to a plain array.
   list: (token: string) =>
-    request<CompanyProfile[]>('/companies/', { headers: authHeader(token) }),
+    request<PaginatedResponse<CompanyProfile> | CompanyProfile[]>('/companies/', { headers: authHeader(token) })
+      .then(r => (Array.isArray(r) ? r : (r.results ?? []))),
 
   create: (token: string, formData: FormData) =>
     requestForm<CompanyProfile>('/companies/', formData, token),
 
   update: (token: string, slug: string, formData: FormData) =>
     requestForm<CompanyProfile>(`/companies/${slug}/`, formData, token, 'PATCH'),
+}
+
+// Verification tiers & workflow (item #12)
+export const verification = {
+  status: (token: string, slug: string) =>
+    request<VerificationStatus>(`/verification/companies/${slug}/`, { headers: authHeader(token) }),
+
+  requests: (token: string, slug?: string) =>
+    request<VerificationRequest[]>(
+      `/verification/requests/${slug ? `?company=${slug}` : ''}`,
+      { headers: authHeader(token) },
+    ),
+
+  // Multipart because Level 2/3 include document uploads.
+  submit: (token: string, formData: FormData) =>
+    requestForm<{ request: VerificationRequest; status: VerificationStatus }>(
+      '/verification/requests/', formData, token),
 }
 
 // Reviews management

@@ -3,13 +3,14 @@
 import { useState, useEffect, lazy, Suspense } from 'react'
 import Link from 'next/link'
 import {
-  MapPin, Phone, Globe, Mail, MessageSquare, BadgeCheck,
+  MapPin, Phone, Globe, Mail, MessageSquare,
   Clock, Share2, Heart, ChevronLeft, ChevronRight, Star,
   Users, Handshake, Sparkles,
   Instagram, Facebook, Twitter, Linkedin, Youtube,
 } from 'lucide-react'
 import type { ListingDetail, Review } from '@/types'
 import StarRating from '@/components/ui/StarRating'
+import VerificationBadge from '@/components/ui/VerificationBadge'
 import ConnectModal from '@/components/connections/ConnectModal'
 import { mediaUrl } from '@/lib/utils'
 
@@ -97,11 +98,12 @@ export default function ListingDetailClient({
                 <span className="badge bg-primary-50 text-primary-700 border border-primary-100 text-[10px] font-semibold uppercase tracking-wide">
                   {listing.category.name}
                 </span>
-                <h1 className="text-2xl sm:text-3xl font-bold text-charcoal mt-2 flex items-center gap-2">
+                <h1 className="text-2xl sm:text-3xl font-bold text-charcoal mt-2 flex items-center gap-2 flex-wrap">
                   {listing.title}
-                  {listing.company_verified && (
-                    <BadgeCheck className="w-6 h-6 text-primary-600 flex-shrink-0" />
-                  )}
+                  <VerificationBadge
+                    level={listing.company_verification_level}
+                    label={listing.company_verification_label}
+                  />
                 </h1>
                 <div className="flex flex-wrap items-center gap-3 mt-2">
                   {listing.review_count > 0 && (
@@ -325,10 +327,14 @@ export default function ListingDetailClient({
                 <Link href={`/company/${listing.company_slug}`} className="text-sm font-medium text-charcoal hover:text-primary-700">
                   {listing.company_name}
                 </Link>
-                {listing.company_verified && (
-                  <p className="text-xs text-primary-600 flex items-center gap-0.5 mt-0.5">
-                    <BadgeCheck className="w-3 h-3" /> Verified
-                  </p>
+                {listing.company_verification_level > 0 && (
+                  <div className="mt-1">
+                    <VerificationBadge
+                      level={listing.company_verification_level}
+                      label={listing.company_verification_label}
+                      size="sm"
+                    />
+                  </div>
                 )}
               </div>
             </div>
