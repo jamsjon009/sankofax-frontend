@@ -117,6 +117,57 @@ export interface Plan {
   features_list: string[]
 }
 
+// Community / Discussion Forum (item #14)
+export interface ForumCategory {
+  id: number
+  name: string
+  slug: string
+  description: string
+  icon: string
+  order: number
+  thread_count: number
+}
+
+export interface ForumThread {
+  id: string
+  title: string
+  slug: string
+  author_name: string
+  category_name: string
+  category_slug: string
+  is_pinned: boolean
+  is_locked: boolean
+  reply_count: number
+  view_count: number
+  excerpt: string
+  created_at: string
+  last_activity_at: string
+}
+
+export interface ForumReply {
+  id: number
+  author_name: string
+  body: string
+  created_at: string
+}
+
+export interface ForumThreadDetail {
+  id: string
+  title: string
+  slug: string
+  body: string
+  author_name: string
+  is_author: boolean
+  category: ForumCategory
+  is_pinned: boolean
+  is_locked: boolean
+  reply_count: number
+  view_count: number
+  created_at: string
+  last_activity_at: string
+  replies: ForumReply[]
+}
+
 export interface PaginatedResponse<T> {
   count: number
   next: string | null

@@ -2,14 +2,18 @@
   Category, ListingCard, ListingDetail, Review, Plan,
   PaginatedResponse, CompanyProfile, User, Amenity, IdentityBadge,
   VerificationStatus, VerificationRequest,
+  ForumCategory, ForumThread, ForumThreadDetail, ForumReply,
 } from '@/types'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  // Pull headers out of options so the spread below can't overwrite the merged
+  // headers (which would drop Content-Type and make DRF reject the body as text/plain).
+  const { headers: optionHeaders, ...rest } = options ?? {}
   const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    ...options,
+    headers: { 'Content-Type': 'application/json', ...optionHeaders },
+    ...rest,
   })
   if (!res.ok) {
     const error = await res.json().catch(() => ({}))
@@ -330,6 +334,41 @@ export const connections = {
 
   unreadCount: (token: string) =>
     request<{ unread: number }>('/connections/unread-count/', { headers: authHeader(token) }),
+}
+
+// Community / Discussion Forum (item #14)
+export const community = {
+  categories: () =>
+    request<ForumCategory[]>('/community/categories/'),
+
+  threads: (params?: { category?: string; q?: string; page?: number }) => {
+    const qs = new URLSearchParams()
+    if (params?.category) qs.set('category', params.category)
+    if (params?.q) qs.set('q', params.q)
+    if (params?.page) qs.set('page', String(params.page))
+    const suffix = qs.toString() ? `?${qs.toString()}` : ''
+    return request<PaginatedResponse<ForumThread> | ForumThread[]>(`/community/threads/${suffix}`)
+  },
+
+  thread: (slug: string) =>
+    request<ForumThreadDetail>(`/community/threads/${slug}/`),
+
+  createThread: (token: string, data: { category: string; title: string; body: string }) =>
+    request<ForumThreadDetail>('/community/threads/', {
+      method: 'POST',
+      headers: authHeader(token),
+      body: JSON.stringify(data),
+    }),
+
+  reply: (token: string, slug: string, body: string) =>
+    request<ForumReply>(`/community/threads/${slug}/replies/`, {
+      method: 'POST',
+      headers: authHeader(token),
+      body: JSON.stringify({ body }),
+    }),
+
+  deleteThread: (token: string, slug: string) =>
+    request<void>(`/community/threads/${slug}/`, { method: 'DELETE', headers: authHeader(token) }),
 }
 
 // Newsletter
