@@ -79,6 +79,8 @@ export interface ListingDetail extends Omit<ListingCard, 'gallery_images'> {
   company_slug: string
   company_logo: string | null
   company_founder_story: string
+  company_services: string[]
+  company_socials: Record<string, string>
   created_at: string
   published_at: string
 }
@@ -131,6 +133,15 @@ export interface CompanyProfile {
   company_size: string
   description: string
   founder_story: string
+  services: string
+  services_list: string[]
+  instagram_url: string
+  facebook_url: string
+  twitter_url: string
+  linkedin_url: string
+  youtube_url: string
+  tiktok_url: string
+  social_links: Record<string, string>
   website: string
   contact_email: string
   contact_phone: string

@@ -9,13 +9,21 @@ import { myCompanies } from '@/lib/api'
 import { tokenStore } from '@/lib/auth'
 import type { CompanyProfile } from '@/types'
 
+const url = z.string().url().optional().or(z.literal(''))
 const schema = z.object({
   company_name: z.string().min(2),
   description: z.string().optional(),
   founder_story: z.string().optional(),
-  website: z.string().url().optional().or(z.literal('')),
+  services: z.string().optional(),
+  website: url,
   contact_email: z.string().email().optional().or(z.literal('')),
   contact_phone: z.string().optional(),
+  instagram_url: url,
+  facebook_url: url,
+  twitter_url: url,
+  linkedin_url: url,
+  youtube_url: url,
+  tiktok_url: url,
 })
 type Form = z.infer<typeof schema>
 
@@ -79,6 +87,25 @@ export default function NewCompanyModal({
               Founder Story <span className="text-muted font-normal">(optional)</span>
             </label>
             <textarea {...register('founder_story')} className="input min-h-[80px] resize-none" placeholder="How and why did you start? Shown on your business profile." />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-charcoal mb-1.5">
+              Services offered <span className="text-muted font-normal">(comma-separated)</span>
+            </label>
+            <input {...register('services')} className="input" placeholder="e.g. Catering, Delivery, Private events" />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-charcoal mb-1.5">Social links <span className="text-muted font-normal">(optional)</span></label>
+            <div className="grid grid-cols-2 gap-3">
+              <input {...register('instagram_url')} className="input" placeholder="Instagram URL" />
+              <input {...register('facebook_url')} className="input" placeholder="Facebook URL" />
+              <input {...register('twitter_url')} className="input" placeholder="X / Twitter URL" />
+              <input {...register('linkedin_url')} className="input" placeholder="LinkedIn URL" />
+              <input {...register('youtube_url')} className="input" placeholder="YouTube URL" />
+              <input {...register('tiktok_url')} className="input" placeholder="TikTok URL" />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">

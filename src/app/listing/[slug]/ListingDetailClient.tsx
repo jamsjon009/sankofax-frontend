@@ -6,6 +6,7 @@ import {
   MapPin, Phone, Globe, Mail, MessageSquare, BadgeCheck,
   Clock, Share2, Heart, ChevronLeft, ChevronRight, Star,
   Users, Handshake, Sparkles,
+  Instagram, Facebook, Twitter, Linkedin, Youtube,
 } from 'lucide-react'
 import type { ListingDetail, Review } from '@/types'
 import StarRating from '@/components/ui/StarRating'
@@ -15,6 +16,14 @@ import { mediaUrl } from '@/lib/utils'
 const SingleListingMap = lazy(() => import('@/components/map/SingleListingMap'))
 
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+
+const SOCIAL_ICONS: Record<string, typeof Instagram> = {
+  instagram: Instagram,
+  facebook: Facebook,
+  twitter: Twitter,
+  linkedin: Linkedin,
+  youtube: Youtube,
+}
 
 export default function ListingDetailClient({
   listing,
@@ -158,6 +167,20 @@ export default function ListingDetailClient({
             </div>
           )}
 
+          {/* Services offered */}
+          {listing.company_services?.length > 0 && (
+            <div>
+              <h2 className="text-lg font-semibold text-charcoal mb-3">Services Offered</h2>
+              <div className="flex flex-wrap gap-2">
+                {listing.company_services.map(s => (
+                  <span key={s} className="badge bg-primary-50 text-primary-700 border border-primary-100 text-xs px-3 py-1">
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Amenities */}
           {listing.amenities.length > 0 && (
             <div>
@@ -242,6 +265,26 @@ export default function ListingDetailClient({
               <a href={listing.website} target="_blank" rel="noopener noreferrer" className="btn-primary w-full justify-center mt-2">
                 Visit Website
               </a>
+            )}
+
+            {Object.keys(listing.company_socials || {}).length > 0 && (
+              <div className="flex items-center gap-2 pt-2 border-t border-gray-100 mt-2">
+                {Object.entries(listing.company_socials).map(([platform, url]) => {
+                  const Icon = SOCIAL_ICONS[platform]
+                  return (
+                    <a
+                      key={platform}
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={platform}
+                      className="w-8 h-8 rounded-lg bg-surface-2 hover:bg-primary-50 flex items-center justify-center text-muted hover:text-primary-700 transition-colors"
+                    >
+                      {Icon ? <Icon className="w-4 h-4" /> : <span className="text-xs font-semibold uppercase">{platform.slice(0, 2)}</span>}
+                    </a>
+                  )
+                })}
+              </div>
             )}
           </div>
 
