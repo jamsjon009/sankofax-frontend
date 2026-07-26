@@ -10,8 +10,10 @@ import Logo from '@/components/ui/Logo'
 import { auth } from '@/lib/api'
 import { tokenStore } from '@/lib/auth'
 import { COUNTRIES, countryToRegion } from '@/lib/countries'
+import { cn } from '@/lib/utils'
 
 const schema = z.object({
+  account_type: z.enum(['visitor', 'business']),
   email: z.string().email('Invalid email'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   password2: z.string(),
@@ -22,21 +24,28 @@ const schema = z.object({
 })
 type Form = z.infer<typeof schema>
 
+const ACCOUNT_TYPES = [
+  { value: 'visitor', title: 'I’m a Visitor', desc: 'Discover and support Black & African-owned businesses.' },
+  { value: 'business', title: 'I’m a Business Owner', desc: 'List my business and connect with the diaspora.' },
+] as const
+
 export default function RegisterPage() {
   const router = useRouter()
   const [serverError, setServerError] = useState('')
   const [emailSent, setEmailSent] = useState(false)
   const [submittedEmail, setSubmittedEmail] = useState('')
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Form>({
+  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<Form>({
     resolver: zodResolver(schema),
+    defaultValues: { account_type: 'visitor' },
   })
+  const accountType = watch('account_type')
 
   async function onSubmit(data: Form) {
     setServerError('')
     const region = countryToRegion(data.country)
     try {
-      const res = await auth.register({ email: data.email, password: data.password, password2: data.password2, region, country: data.country })
+      const res = await auth.register({ email: data.email, password: data.password, password2: data.password2, region, country: data.country, account_type: data.account_type })
       tokenStore.set(res.access, res.refresh, res.user)
       setSubmittedEmail(data.email)
       setEmailSent(true)
@@ -93,6 +102,28 @@ export default function RegisterPage() {
                 {serverError}
               </div>
             )}
+
+            {/* Account type */}
+            <div>
+              <label className="block text-sm font-medium text-charcoal mb-2">I want to join as</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {ACCOUNT_TYPES.map(t => (
+                  <label
+                    key={t.value}
+                    className={cn(
+                      'cursor-pointer rounded-xl border p-3 transition-colors',
+                      accountType === t.value
+                        ? 'border-primary-500 bg-primary-50 ring-1 ring-primary-500'
+                        : 'border-gray-200 hover:border-primary-300',
+                    )}
+                  >
+                    <input type="radio" value={t.value} {...register('account_type')} className="sr-only" />
+                    <span className="block text-sm font-semibold text-charcoal">{t.title}</span>
+                    <span className="block text-xs text-muted mt-0.5 leading-snug">{t.desc}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
 
             <div>
               <label className="block text-sm font-medium text-charcoal mb-1.5">Email</label>
