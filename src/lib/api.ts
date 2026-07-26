@@ -195,6 +195,18 @@ export const siteSettings = {
   get: () => request<SiteSettings>('/site-settings/'),
 }
 
+// Public homepage stats
+export interface PublicStats {
+  businesses: number
+  members: number
+  partnerships: number
+  countries: number
+}
+
+export const stats = {
+  get: () => request<PublicStats>('/stats/'),
+}
+
 // Plans
 export const plans = {
   list: (region?: string) => {

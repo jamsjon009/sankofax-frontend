@@ -1,4 +1,4 @@
-﻿import { categories, listings, plans, testimonials, faqs } from '@/lib/api'
+﻿import { categories, listings, plans, testimonials, faqs, stats } from '@/lib/api'
 import HeroSection from '@/components/home/HeroSection'
 import CategoryGrid from '@/components/home/CategoryGrid'
 import FeaturedListings from '@/components/home/FeaturedListings'
@@ -12,19 +12,20 @@ import CTABanner from '@/components/home/CTABanner'
 import NewsletterSection from '@/components/home/NewsletterSection'
 
 export default async function HomePage() {
-  const [catsRaw, featured, northPlans, southPlans, testimonialList, faqList] = await Promise.all([
+  const [catsRaw, featured, northPlans, southPlans, testimonialList, faqList, statsData] = await Promise.all([
     categories.list().catch(() => []),
     listings.list({ featured: true, page: 1 }).catch(() => ({ results: [] })),
     plans.list('global_north').catch(() => []),
     plans.list('global_south').catch(() => []),
     testimonials.list().catch(() => []),
     faqs.list().catch(() => []),
+    stats.get().catch(() => null),
   ])
   const cats = Array.isArray(catsRaw) ? catsRaw : ((catsRaw as { results?: typeof catsRaw })?.results ?? [])
 
   return (
     <>
-      <HeroSection categories={cats} />
+      <HeroSection categories={cats} stats={statsData} />
       <CategoryGrid categories={cats} />
       <FeaturedListings listings={featured.results} />
       <WhyListSection />

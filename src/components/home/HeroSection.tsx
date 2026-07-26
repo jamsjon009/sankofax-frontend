@@ -4,10 +4,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, MapPin } from 'lucide-react'
 import type { Category } from '@/types'
+import type { PublicStats } from '@/lib/api'
 
 const POPULAR = ['Restaurants', 'Wellness', 'Tech Companies', 'Therapists', 'Creatives', 'Hair & Beauty']
 
-export default function HeroSection({ categories }: { categories: Category[] }) {
+export default function HeroSection({ categories, stats }: { categories: Category[]; stats?: PublicStats | null }) {
   const router = useRouter()
   const [query, setQuery] = useState('')
   const [location, setLocation] = useState('')
@@ -114,12 +115,14 @@ export default function HeroSection({ categories }: { categories: Category[] }) 
 
         <div className="mt-12 flex flex-wrap gap-8">
           {[
-            { label: 'Listed Businesses', value: '2,400+' },
-            { label: 'Countries Covered', value: '54+' },
-            { label: 'Categories', value: '10+' },
+            { label: 'Businesses', value: stats?.businesses },
+            { label: 'Members', value: stats?.members },
+            { label: 'Partnerships', value: stats?.partnerships },
           ].map(stat => (
             <div key={stat.label}>
-              <p className="text-2xl font-bold text-white">{stat.value}</p>
+              <p className="text-2xl font-bold text-white">
+                {stat.value != null ? stat.value.toLocaleString() : '—'}
+              </p>
               <p className="text-sm text-white/50 mt-0.5">{stat.label}</p>
             </div>
           ))}
