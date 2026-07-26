@@ -261,6 +261,17 @@ export const faqs = {
   list: () => request<FAQ[]>('/faqs/'),
 }
 
+// Static / legal pages (Terms, Privacy, Cookies, …) — admin-editable content
+export interface StaticPage {
+  title: string
+  content: string
+  updated_at?: string
+}
+
+export const pages = {
+  get: (slug: string) => request<StaticPage>(`/pages/${slug}/`),
+}
+
 // Connections (Connect / Collaborate)
 export interface Connection {
   id: string
