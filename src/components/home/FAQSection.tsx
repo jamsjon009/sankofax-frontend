@@ -33,7 +33,7 @@ const FALLBACK_FAQS = [
   },
 ]
 
-export default function FAQSection({ faqs }: { faqs?: FAQ[] }) {
+export default function FAQSection({ faqs, showHeading = true }: { faqs?: FAQ[]; showHeading?: boolean }) {
   const [open, setOpen] = useState<number | null>(0)
 
   // Prefer admin-managed FAQs; fall back to the built-in list if none exist.
@@ -43,10 +43,12 @@ export default function FAQSection({ faqs }: { faqs?: FAQ[] }) {
   return (
     <section className="bg-surface-2 py-16">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <h2 className="section-title mb-3">Got Questions?</h2>
-          <p className="text-muted text-sm">Everything you need to know about SankofaX</p>
-        </div>
+        {showHeading && (
+          <div className="text-center mb-10">
+            <h2 className="section-title mb-3">Got Questions?</h2>
+            <p className="text-muted text-sm">Everything you need to know about SankofaX</p>
+          </div>
+        )}
 
         <div className="space-y-3">
           {items.map((faq, i) => (

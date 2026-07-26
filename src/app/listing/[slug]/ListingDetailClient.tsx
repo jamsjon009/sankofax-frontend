@@ -37,7 +37,7 @@ export default function ListingDetailClient({
   const images = listing.gallery_images.map(g => g.image)
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb */}
       <nav className="text-xs text-muted mb-6 flex items-center gap-1.5">
         <Link href="/" className="hover:text-charcoal">Home</Link>
@@ -49,9 +49,9 @@ export default function ListingDetailClient({
         <span className="text-charcoal font-medium truncate max-w-[200px]">{listing.title}</span>
       </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Main column */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-8 space-y-8 min-w-0">
           {/* Gallery */}
           <div className="relative rounded-2xl overflow-hidden bg-surface-2 aspect-[16/9]">
             {images.length > 0 ? (
@@ -222,7 +222,7 @@ export default function ListingDetailClient({
         </div>
 
         {/* Sidebar */}
-        <aside className="space-y-5">
+        <aside className="lg:col-span-4 space-y-5 lg:sticky lg:top-24 lg:self-start">
           {/* Connect & Collaborate */}
           <div className="card p-5 space-y-2.5">
             <h3 className="font-semibold text-charcoal text-sm">Get in touch</h3>

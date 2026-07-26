@@ -12,7 +12,7 @@ export default function PricingClient({ northPlans, southPlans }: { northPlans: 
   const safeDisplayPlans = Array.isArray(displayPlans) ? displayPlans : []
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-charcoal mb-3">Simple, Fair Pricing</h1>
@@ -48,7 +48,7 @@ export default function PricingClient({ northPlans, southPlans }: { northPlans: 
           No plans available at the moment. Please check back later.
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
           {safeDisplayPlans.map((plan, i) => {
             const isPopular = i === 1
             return (
@@ -108,7 +108,8 @@ export default function PricingClient({ northPlans, southPlans }: { northPlans: 
         <div className="mt-16">
           <h2 className="text-xl font-bold text-charcoal text-center mb-6">Feature Comparison</h2>
           <div className="card overflow-hidden">
-            <table className="w-full text-sm">
+           <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[520px]">
               <thead>
                 <tr className="bg-surface-2 border-b border-gray-100">
                   <th className="text-left px-5 py-3 font-semibold text-charcoal">Feature</th>
@@ -135,6 +136,7 @@ export default function PricingClient({ northPlans, southPlans }: { northPlans: 
                 ))}
               </tbody>
             </table>
+           </div>
           </div>
         </div>
       )}

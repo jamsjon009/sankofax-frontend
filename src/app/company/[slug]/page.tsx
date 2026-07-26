@@ -47,7 +47,7 @@ export default async function CompanyPage({ params }: Props) {
         )}
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="-mt-14 relative flex flex-col sm:flex-row sm:items-end gap-4 pb-6 border-b border-gray-100">
           <div className="w-24 h-24 rounded-2xl bg-white shadow-md overflow-hidden flex-shrink-0 flex items-center justify-center">
@@ -87,9 +87,9 @@ export default async function CompanyPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 py-8 items-start">
           {/* Main */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-8 space-y-8 min-w-0">
             {company.description && (
               <section>
                 <h2 className="text-lg font-semibold text-charcoal mb-3">About</h2>
@@ -136,7 +136,7 @@ export default async function CompanyPage({ params }: Props) {
           </div>
 
           {/* Sidebar */}
-          <aside className="space-y-5">
+          <aside className="lg:col-span-4 space-y-5 lg:sticky lg:top-24 lg:self-start">
             <div className="card p-5 space-y-3">
               <h3 className="font-semibold text-charcoal text-sm">Contact</h3>
               {company.contact_phone && (
