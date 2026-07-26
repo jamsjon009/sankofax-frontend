@@ -141,6 +141,7 @@ export const myReviews = {
 // Listings
 export interface ListingFilters {
   category?: string
+  company?: string
   business_type?: string
   city?: string
   country?: string
