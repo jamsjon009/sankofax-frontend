@@ -6,6 +6,9 @@ import { siteSettings } from '@/lib/api'
 
 const DISCOVER = [
   { label: 'Directory', href: '/directory' },
+  { label: 'Community', href: '/community' },
+  { label: 'Success Stories', href: '/stories' },
+  { label: 'Diaspora News', href: '/news' },
   { label: 'Events', href: '/events' },
   { label: 'Marketplace', href: '/marketplace' },
   { label: 'Pricing', href: '/pricing' },
