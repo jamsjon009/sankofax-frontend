@@ -224,6 +224,104 @@ export interface EventItem {
   my_registration: EventRegistration | null
 }
 
+// Marketplace: products, services, orders, bookings (item #17)
+export interface ProductImage {
+  id: number
+  image: string
+  order: number
+}
+
+export interface Product {
+  id: string
+  slug: string
+  company: string
+  company_name: string
+  company_slug: string
+  category: number
+  name: string
+  description: string
+  price: string
+  currency: string
+  stock_status: 'in_stock' | 'out_of_stock' | 'made_to_order'
+  external_purchase_url: string
+  is_active: boolean
+  images: ProductImage[]
+  created_at: string
+}
+
+export interface Service {
+  id: string
+  slug: string
+  company: string
+  company_name: string
+  company_slug: string
+  category: number
+  name: string
+  description: string
+  price: string
+  currency: string
+  duration_minutes: number
+  is_virtual: boolean
+  location: string
+  is_active: boolean
+  created_at: string
+}
+
+export interface OrderItem {
+  id: number
+  product: string | null
+  product_slug: string | null
+  name: string
+  unit_price: string
+  quantity: number
+  subtotal: string
+}
+
+export type OrderStatus = 'pending' | 'paid' | 'fulfilled' | 'cancelled' | 'refunded'
+
+export interface Order {
+  id: string
+  order_number: string
+  company: string
+  company_name: string
+  buyer_name: string
+  status: OrderStatus
+  currency: string
+  total: string
+  contact_name: string
+  contact_email: string
+  shipping_address: string
+  note: string
+  items: OrderItem[]
+  paid_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type BookingStatus =
+  | 'pending_payment' | 'pending' | 'confirmed' | 'completed' | 'declined' | 'cancelled'
+
+export interface ServiceBooking {
+  id: string
+  booking_number: string
+  service: string | null
+  service_slug: string | null
+  service_name: string
+  company: string
+  company_name: string
+  customer_name: string
+  scheduled_for: string
+  status: BookingStatus
+  currency: string
+  total: string
+  contact_name: string
+  contact_email: string
+  note: string
+  paid_at: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface MyTicket extends EventRegistration {
   event: {
     id: string

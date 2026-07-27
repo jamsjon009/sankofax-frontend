@@ -3,7 +3,8 @@
 import { useState, useCallback, useTransition } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Image from 'next/image'
-import { Search, ShoppingBag, ExternalLink, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import Link from 'next/link'
+import { Search, ShoppingBag, CalendarClock, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import type { PaginatedResponse } from '@/types'
 import { cn } from '@/lib/utils'
 
@@ -62,9 +63,14 @@ export default function MarketplaceClient({ data, initialFilters }: Props) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Hero */}
-      <div className="mb-10">
-        <h1 className="text-3xl sm:text-4xl font-bold text-charcoal mb-2">Marketplace</h1>
-        <p className="text-muted">Shop unique products from Black and African-owned businesses worldwide</p>
+      <div className="mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-charcoal mb-2">Marketplace</h1>
+          <p className="text-muted">Shop unique products from Black and African-owned businesses worldwide</p>
+        </div>
+        <Link href="/marketplace/services" className="btn-outline gap-2 self-start sm:self-auto whitespace-nowrap">
+          <CalendarClock className="w-4 h-4" /> Book a service
+        </Link>
       </div>
 
       {/* Search */}
@@ -148,7 +154,7 @@ function ProductCard({ product }: { product: Product }) {
   const cover = product.images[0]?.image ?? null
 
   return (
-    <div className="card overflow-hidden flex flex-col group">
+    <Link href={`/marketplace/${product.slug}`} className="card overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
       {/* Image */}
       <div className="relative aspect-square bg-surface-2 overflow-hidden">
         {cover ? (
@@ -169,24 +175,18 @@ function ProductCard({ product }: { product: Product }) {
       {/* Info */}
       <div className="p-3 flex flex-col flex-1">
         <p className="text-[10px] text-muted mb-0.5 truncate">{product.company_name}</p>
-        <h3 className="text-sm font-semibold text-charcoal line-clamp-2 mb-2 leading-snug">{product.name}</h3>
+        <h3 className="text-sm font-semibold text-charcoal line-clamp-2 mb-2 leading-snug group-hover:text-primary-700 transition-colors">{product.name}</h3>
         <div className="flex items-center justify-between gap-1 mt-auto">
           <span className="text-sm font-bold text-charcoal">
             {product.currency} {product.price}
           </span>
-          {product.external_purchase_url && product.stock_status !== 'out_of_stock' && (
-            <a
-              href={product.external_purchase_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary text-[10px] px-2 py-1 gap-1"
-            >
-              Buy
-              <ExternalLink className="w-2.5 h-2.5" />
-            </a>
+          {product.stock_status !== 'out_of_stock' && (
+            <span className="btn-primary text-[10px] px-2 py-1 gap-1 pointer-events-none">
+              <ShoppingBag className="w-2.5 h-2.5" /> Shop
+            </span>
           )}
         </div>
       </div>
-    </div>
+    </Link>
   )
 }

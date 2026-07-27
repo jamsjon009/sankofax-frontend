@@ -4,6 +4,7 @@
   VerificationStatus, VerificationRequest,
   ForumCategory, ForumThread, ForumThreadDetail, ForumReply,
   EventItem, EventRegistration, MyTicket, AttendeeList,
+  Product, Service, Order, ServiceBooking,
 } from '@/types'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'
@@ -398,6 +399,61 @@ export const events = {
       method: 'POST',
       headers: authHeader(token),
       body: JSON.stringify({ checked_in }),
+    }),
+}
+
+// Marketplace: products, services, in-platform checkout & booking (item #17)
+export const marketplace = {
+  // Products
+  products: (params?: { category?: string; company?: string; stock_status?: string; search?: string; ordering?: string; page?: number }) => {
+    const q = new URLSearchParams()
+    Object.entries(params ?? {}).forEach(([k, v]) => { if (v !== undefined && v !== '') q.set(k, String(v)) })
+    const qs = q.toString() ? `?${q}` : ''
+    return request<PaginatedResponse<Product>>(`/marketplace/${qs}`)
+  },
+  product: (slug: string) => request<Product>(`/marketplace/${slug}/`),
+
+  // Services
+  services: (params?: { category?: string; company?: string; is_virtual?: boolean; search?: string; ordering?: string; page?: number }) => {
+    const q = new URLSearchParams()
+    Object.entries(params ?? {}).forEach(([k, v]) => { if (v !== undefined && v !== '') q.set(k, String(v)) })
+    const qs = q.toString() ? `?${q}` : ''
+    return request<PaginatedResponse<Service>>(`/marketplace/services/${qs}`)
+  },
+  service: (slug: string) => request<Service>(`/marketplace/services/${slug}/`),
+
+  // Checkout (products) -> Stripe redirect
+  checkout: (token: string, data: {
+    items: { product: string; quantity: number }[]
+    contact_name: string; contact_email: string; shipping_address?: string; note?: string
+  }) =>
+    request<{ checkout_url: string; order: Order }>('/marketplace/checkout/', {
+      method: 'POST', headers: authHeader(token), body: JSON.stringify(data),
+    }),
+
+  // Orders
+  orders: (token: string, role: 'buyer' | 'seller' = 'buyer') =>
+    request<PaginatedResponse<Order> | Order[]>(`/marketplace/orders/?role=${role}`, { headers: authHeader(token) })
+      .then(r => (Array.isArray(r) ? r : (r.results ?? []))),
+  order: (token: string, orderNumber: string) =>
+    request<Order>(`/marketplace/orders/${orderNumber}/`, { headers: authHeader(token) }),
+  updateOrder: (token: string, orderNumber: string, status: Order['status']) =>
+    request<Order>(`/marketplace/orders/${orderNumber}/`, {
+      method: 'PATCH', headers: authHeader(token), body: JSON.stringify({ status }),
+    }),
+
+  // Bookings
+  book: (token: string, data: {
+    service: string; scheduled_for: string; contact_name: string; contact_email: string; note?: string
+  }) =>
+    request<{ checkout_url: string | null; booking: ServiceBooking }>('/marketplace/bookings/', {
+      method: 'POST', headers: authHeader(token), body: JSON.stringify(data),
+    }),
+  bookings: (token: string, role: 'customer' | 'seller' = 'customer') =>
+    request<ServiceBooking[]>(`/marketplace/bookings/?role=${role}`, { headers: authHeader(token) }),
+  updateBooking: (token: string, bookingNumber: string, status: ServiceBooking['status']) =>
+    request<ServiceBooking>(`/marketplace/bookings/${bookingNumber}/`, {
+      method: 'PATCH', headers: authHeader(token), body: JSON.stringify({ status }),
     }),
 }
 

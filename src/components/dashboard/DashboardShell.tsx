@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, Building2, PlusCircle, User, CreditCard, LogOut, MessageSquareQuote, Inbox, BadgeCheck, Ticket } from 'lucide-react'
+import { LayoutDashboard, Building2, PlusCircle, User, CreditCard, LogOut, MessageSquareQuote, Inbox, BadgeCheck, Ticket, Package, CalendarClock } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils'
 
@@ -11,6 +11,8 @@ const NAV = [
   { href: '/dashboard', label: 'Overview', icon: LayoutDashboard, exact: true },
   { href: '/dashboard/inbox', label: 'Inbox', icon: Inbox },
   { href: '/dashboard/tickets', label: 'My Tickets', icon: Ticket },
+  { href: '/dashboard/orders', label: 'Orders', icon: Package },
+  { href: '/dashboard/bookings', label: 'Bookings', icon: CalendarClock },
   { href: '/dashboard/business', label: 'My Listings', icon: Building2 },
   { href: '/dashboard/business/new-listing', label: 'Add Listing', icon: PlusCircle },
   { href: '/dashboard/verification', label: 'Verification', icon: BadgeCheck },
