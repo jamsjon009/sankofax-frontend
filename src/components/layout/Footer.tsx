@@ -13,6 +13,7 @@ const DISCOVER = [
   { label: 'Marketplace', href: '/marketplace' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Blog', href: '/blog' },
+  { label: 'Promote Your Story', href: '/promote' },
   { label: 'List Your Business', href: '/list-your-business' },
 ]
 

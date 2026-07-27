@@ -322,6 +322,50 @@ export interface ServiceBooking {
   updated_at: string
 }
 
+// Story-promotion packages (item #18)
+export type StoryKind = 'founder_story' | 'brand_feature' | 'press_release'
+
+export interface StoryPackage {
+  id: number
+  name: string
+  slug: string
+  kind: StoryKind
+  kind_label: string
+  price: string
+  your_price: string
+  currency: string
+  duration_days: number
+  subscriber_discount_percent: number
+  description: string
+  features_list: string[]
+}
+
+export type StorySubmissionStatus = 'pending_payment' | 'in_review' | 'published' | 'rejected'
+
+export interface StorySubmission {
+  id: string
+  reference: string
+  package: number
+  package_name: string
+  kind: StoryKind
+  kind_label: string
+  company: string
+  company_name: string
+  title: string
+  body: string
+  cover_image: string | null
+  contact_email: string
+  amount: string
+  currency: string
+  status: StorySubmissionStatus
+  admin_note: string
+  post_slug: string | null
+  featured_until: string | null
+  paid_at: string | null
+  created_at: string
+  updated_at: string
+}
+
 export interface MyTicket extends EventRegistration {
   event: {
     id: string

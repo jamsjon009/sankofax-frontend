@@ -5,6 +5,7 @@
   ForumCategory, ForumThread, ForumThreadDetail, ForumReply,
   EventItem, EventRegistration, MyTicket, AttendeeList,
   Product, Service, Order, ServiceBooking,
+  StoryPackage, StorySubmission,
 } from '@/types'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'
@@ -455,6 +456,23 @@ export const marketplace = {
     request<ServiceBooking>(`/marketplace/bookings/${bookingNumber}/`, {
       method: 'PATCH', headers: authHeader(token), body: JSON.stringify({ status }),
     }),
+}
+
+// Story-promotion packages (item #18)
+export const promotions = {
+  packages: (token?: string) =>
+    request<StoryPackage[]>('/promotions/packages/', token ? { headers: authHeader(token) } : undefined),
+
+  // Multipart because the story can include a cover image.
+  submit: (token: string, formData: FormData) =>
+    requestForm<{ checkout_url: string; submission: StorySubmission }>(
+      '/promotions/submissions/', formData, token),
+
+  mySubmissions: (token: string) =>
+    request<StorySubmission[]>('/promotions/submissions/', { headers: authHeader(token) }),
+
+  submission: (token: string, reference: string) =>
+    request<StorySubmission>(`/promotions/submissions/${reference}/`, { headers: authHeader(token) }),
 }
 
 // Newsletter
