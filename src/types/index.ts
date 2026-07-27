@@ -175,6 +175,79 @@ export interface PaginatedResponse<T> {
   results: T[]
 }
 
+// Events & in-platform RSVP / ticketing (item #16)
+export interface EventRegistration {
+  id: string
+  name: string
+  email: string
+  quantity: number
+  note: string
+  status: 'confirmed' | 'waitlisted' | 'cancelled'
+  ticket_code: string
+  checked_in: boolean
+  checked_in_at: string | null
+  created_at: string
+}
+
+export interface EventItem {
+  id: string
+  slug: string
+  title: string
+  description: string
+  city: string
+  country: string
+  venue_name: string
+  latitude: string | null
+  longitude: string | null
+  start_datetime: string
+  end_datetime: string
+  timezone: string
+  is_virtual: boolean
+  virtual_link: string
+  cover_image: string | null
+  ticket_url: string
+  ticket_price: string | null
+  currency: string
+  organizer: string
+  organizer_name: string
+  status: string
+  // RSVP
+  rsvp_enabled: boolean
+  capacity: number | null
+  allow_waitlist: boolean
+  registration_deadline: string | null
+  confirmed_count: number
+  spots_left: number | null
+  is_full: boolean
+  registration_open: boolean
+  registration_closes_at: string
+  my_registration: EventRegistration | null
+}
+
+export interface MyTicket extends EventRegistration {
+  event: {
+    id: string
+    title: string
+    slug: string
+    city: string
+    country: string
+    venue_name: string
+    is_virtual: boolean
+    start_datetime: string
+    end_datetime: string
+    cover_image: string | null
+    status: string
+  }
+}
+
+export interface AttendeeList {
+  event: string
+  capacity: number | null
+  confirmed_count: number
+  waitlist_count: number
+  attendees: EventRegistration[]
+}
+
 export interface CompanyProfile {
   id: string
   owner_email: string

@@ -25,6 +25,9 @@ interface Event {
   ticket_price: string | null
   currency: string
   organizer_name: string
+  rsvp_enabled?: boolean
+  is_full?: boolean
+  spots_left?: number | null
 }
 
 interface Props {
@@ -143,8 +146,10 @@ function EventCard({ event }: { event: Event }) {
   const timeStr = start.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
   const isPast = start < new Date()
 
+  const priceFree = !event.ticket_price || Number(event.ticket_price) === 0
+
   return (
-    <div className="card overflow-hidden flex flex-col">
+    <Link href={`/events/${event.slug}`} className="card overflow-hidden flex flex-col group hover:shadow-md transition-shadow">
       {/* Cover */}
       <div className="relative h-44 bg-surface-2 flex-shrink-0">
         {event.cover_image ? (
@@ -169,7 +174,7 @@ function EventCard({ event }: { event: Event }) {
           {dateStr} · {timeStr}
         </div>
 
-        <h3 className="font-bold text-charcoal text-sm leading-snug mb-1 line-clamp-2">{event.title}</h3>
+        <h3 className="font-bold text-charcoal text-sm leading-snug mb-1 line-clamp-2 group-hover:text-primary-700 transition-colors">{event.title}</h3>
 
         <div className="flex items-center gap-1 text-xs text-muted mb-3">
           <MapPin className="w-3 h-3 flex-shrink-0" />
@@ -180,27 +185,23 @@ function EventCard({ event }: { event: Event }) {
 
         <div className="flex items-center justify-between gap-2 mt-auto">
           <div>
-            {event.ticket_price ? (
-              <span className="text-sm font-bold text-charcoal">
-                {event.currency} {event.ticket_price}
+            {priceFree
+              ? <span className="text-sm font-semibold text-green-700">Free</span>
+              : <span className="text-sm font-bold text-charcoal">{event.currency} {event.ticket_price}</span>}
+            {event.rsvp_enabled && !isPast && event.spots_left != null && (
+              <span className="block text-[11px] text-muted mt-0.5">
+                {event.is_full ? 'Waitlist open' : `${event.spots_left} spot${event.spots_left === 1 ? '' : 's'} left`}
               </span>
-            ) : (
-              <span className="text-sm font-semibold text-green-700">Free</span>
             )}
           </div>
-          {event.ticket_url && !isPast && (
-            <a
-              href={event.ticket_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary text-xs px-3 py-1.5 gap-1.5"
-            >
+          {!isPast && (
+            <span className="btn-primary text-xs px-3 py-1.5 gap-1.5 pointer-events-none">
               <Ticket className="w-3.5 h-3.5" />
-              Get Tickets
-            </a>
+              {event.rsvp_enabled ? 'RSVP' : event.ticket_url ? 'Get Tickets' : 'Details'}
+            </span>
           )}
         </div>
       </div>
-    </div>
+    </Link>
   )
 }

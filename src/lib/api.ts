@@ -3,6 +3,7 @@
   PaginatedResponse, CompanyProfile, User, Amenity, IdentityBadge,
   VerificationStatus, VerificationRequest,
   ForumCategory, ForumThread, ForumThreadDetail, ForumReply,
+  EventItem, EventRegistration, MyTicket, AttendeeList,
 } from '@/types'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'
@@ -369,6 +370,35 @@ export const community = {
 
   deleteThread: (token: string, slug: string) =>
     request<void>(`/community/threads/${slug}/`, { method: 'DELETE', headers: authHeader(token) }),
+}
+
+// Events & in-platform RSVP / ticketing (item #16)
+export const events = {
+  get: (slug: string, token?: string) =>
+    request<EventItem>(`/events/${slug}/`, token ? { headers: authHeader(token) } : undefined),
+
+  register: (token: string, slug: string, data: { quantity?: number; note?: string } = {}) =>
+    request<EventRegistration>(`/events/${slug}/register/`, {
+      method: 'POST',
+      headers: authHeader(token),
+      body: JSON.stringify({ quantity: data.quantity ?? 1, note: data.note ?? '' }),
+    }),
+
+  cancel: (token: string, slug: string) =>
+    request<void>(`/events/${slug}/register/`, { method: 'DELETE', headers: authHeader(token) }),
+
+  myTickets: (token: string) =>
+    request<MyTicket[]>('/events/my-tickets/', { headers: authHeader(token) }),
+
+  attendees: (token: string, slug: string) =>
+    request<AttendeeList>(`/events/${slug}/attendees/`, { headers: authHeader(token) }),
+
+  checkIn: (token: string, slug: string, regId: string, checked_in: boolean) =>
+    request<EventRegistration>(`/events/${slug}/attendees/${regId}/check-in/`, {
+      method: 'POST',
+      headers: authHeader(token),
+      body: JSON.stringify({ checked_in }),
+    }),
 }
 
 // Newsletter
