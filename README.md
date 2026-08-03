@@ -75,9 +75,9 @@ npm install --legacy-peer-deps
 cp .env.example .env.local
 ```
 
-`.env.local` should contain:
+`.env.local` should contain (note: the API path is `/api`, **not** `/api/v1`):
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+NEXT_PUBLIC_API_URL=http://localhost:8000/api
 NEXT_PUBLIC_MEDIA_URL=http://localhost:8000
 NEXT_PUBLIC_SITE_NAME=SankofaX
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
@@ -89,6 +89,30 @@ npm run dev
 ```
 
 Open `http://localhost:3000`
+
+---
+
+## Commands / Scripts
+
+| Command | What it does |
+|---|---|
+| `npm install --legacy-peer-deps` | Install dependencies. |
+| `npm run dev` | Start the dev server at `http://localhost:3000` (needs the backend API running). |
+| `npm run build` | Production build. |
+| `npm start` | Serve the production build (after `npm run build`). |
+| `npm run lint` | Run ESLint (Next.js lint). |
+| `npm run type-check` | TypeScript type-check (`tsc --noEmit`). |
+
+**First-run setup:**
+```bash
+npm install --legacy-peer-deps
+cp .env.example .env.local     # then edit if your API URL differs
+npm run dev
+```
+
+> The frontend only reads from the backend API — there are no seed/data commands here.
+> Populate content by running the backend's seed commands (`seed_demo`,
+> `seed_real_businesses`, `seed_real_images`, `geocode_locations`). See the backend README.
 
 ---
 
@@ -134,7 +158,7 @@ See `vercel.json` for build config.
 ```bash
 docker build -t sankofax-frontend .
 docker run -p 3000:3000 \
-  -e NEXT_PUBLIC_API_URL=https://api.sankofax.com/api/v1 \
+  -e NEXT_PUBLIC_API_URL=https://api.sankofax.com/api \
   sankofax-frontend
 ```
 
