@@ -1,13 +1,22 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Check, Zap } from 'lucide-react'
 import type { Plan } from '@/types'
+import { region as regionApi } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
 export default function PricingClient({ northPlans, southPlans }: { northPlans: Plan[]; southPlans: Plan[] }) {
   const [region, setRegion] = useState<'global_north' | 'global_south'>('global_north')
+
+  // Auto-select the visitor's region from their detected location (item #23).
+  useEffect(() => {
+    regionApi.detect()
+      .then(r => { if (r.region) setRegion(r.region) })
+      .catch(() => {})
+  }, [])
+
   const displayPlans = region === 'global_north' ? northPlans : southPlans
   const safeDisplayPlans = Array.isArray(displayPlans) ? displayPlans : []
 
@@ -48,7 +57,7 @@ export default function PricingClient({ northPlans, southPlans }: { northPlans: 
           No plans available at the moment. Please check back later.
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch max-w-5xl mx-auto">
           {safeDisplayPlans.map((plan, i) => {
             const isPopular = i === 1
             return (

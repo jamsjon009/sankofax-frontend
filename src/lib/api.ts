@@ -267,6 +267,18 @@ export const homeContent = {
   get: () => request<HomeContent>('/home-content/'),
 }
 
+// Region auto-detection (from geo headers) — used to default pricing to the
+// visitor's tier automatically (item #23). Region is '' when undetectable.
+export type RegionCode = 'global_north' | 'global_south'
+export interface RegionInfo {
+  country: string
+  region: RegionCode | ''
+}
+
+export const region = {
+  detect: () => request<RegionInfo>('/auth/region/'),
+}
+
 // Plans
 export const plans = {
   list: (region?: string) => {

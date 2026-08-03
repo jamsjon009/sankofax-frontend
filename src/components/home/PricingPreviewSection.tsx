@@ -1,11 +1,11 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Check, ArrowRight, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Plan } from '@/types'
-import type { HomeContent } from '@/lib/api'
+import { region as regionApi, type HomeContent } from '@/lib/api'
 
 const REGIONS = {
   global_north: { label: 'GLOBAL NORTH', sub: '(United States, UK, Canada, EU, Australia, etc.)' },
@@ -20,6 +20,14 @@ interface Props {
 
 export default function PricingPreviewSection({ northPlans, southPlans, content }: Props) {
   const [region, setRegion] = useState<'global_north' | 'global_south'>('global_north')
+
+  // Auto-select the visitor's region from their detected location (item #23).
+  useEffect(() => {
+    regionApi.detect()
+      .then(r => { if (r.region) setRegion(r.region) })
+      .catch(() => {})
+  }, [])
+
   const plans = region === 'global_north' ? northPlans : southPlans
   const regionInfo = REGIONS[region]
 
