@@ -4,15 +4,22 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, MapPin } from 'lucide-react'
 import type { Category } from '@/types'
-import type { PublicStats } from '@/lib/api'
+import type { PublicStats, HomeContent } from '@/lib/api'
 
 const POPULAR = ['Restaurants', 'Wellness', 'Tech Companies', 'Therapists', 'Creatives', 'Hair & Beauty']
 
-export default function HeroSection({ categories, stats }: { categories: Category[]; stats?: PublicStats | null }) {
+export default function HeroSection({ categories, stats, content }: { categories: Category[]; stats?: PublicStats | null; content?: HomeContent | null }) {
   const router = useRouter()
   const [query, setQuery] = useState('')
   const [location, setLocation] = useState('')
   const [category, setCategory] = useState('')
+
+  const badge = content?.hero_badge || 'The Global Black & African Business Directory'
+  const title = content?.hero_title || 'The Global Directory for'
+  const titleHighlight = content?.hero_title_highlight || 'Black & African-Owned Businesses'
+  const subtitle = content?.hero_subtitle ||
+    'Discover, support, and connect with Black and African-owned businesses across the diaspora — restaurants, wellness, tech, creatives, and more.'
+  const popular = content?.hero_popular_searches?.length ? content.hero_popular_searches : POPULAR
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault()
@@ -41,14 +48,14 @@ export default function HeroSection({ categories, stats }: { categories: Categor
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
         <div className="max-w-3xl">
           <span className="badge bg-accent-500/20 text-accent-300 border border-accent-500/30 mb-5">
-            The Global Black &amp; African Business Directory
+            {badge}
           </span>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mt-3 leading-[1.1]">
-            The Global Directory for<br />
-            <span className="text-accent-400">Black &amp; African-Owned Businesses</span>
+            {title}<br />
+            <span className="text-accent-400">{titleHighlight}</span>
           </h1>
           <p className="mt-5 text-lg text-white/70 max-w-xl leading-relaxed">
-            Discover, support, and connect with Black and African-owned businesses across the diaspora &mdash; restaurants, wellness, tech, creatives, and more.
+            {subtitle}
           </p>
         </div>
 
@@ -102,7 +109,7 @@ export default function HeroSection({ categories, stats }: { categories: Categor
 
         <div className="mt-5 flex flex-wrap gap-2 items-center">
           <span className="text-white/40 text-sm">Popular:</span>
-          {POPULAR.map(term => (
+          {popular.map(term => (
             <button
               key={term}
               onClick={() => router.push(`/directory?q=${encodeURIComponent(term)}`)}

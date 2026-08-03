@@ -235,6 +235,38 @@ export const stats = {
   get: () => request<PublicStats>('/stats/'),
 }
 
+// Editable homepage marketing copy (admin-managed — item #22)
+export interface HomeBenefit {
+  title: string
+  desc: string
+}
+
+export interface HomeContent {
+  hero_badge: string
+  hero_title: string
+  hero_title_highlight: string
+  hero_subtitle: string
+  hero_popular_searches: string[]
+  why_list_title: string
+  why_list_subtitle: string
+  why_list_benefits: HomeBenefit[]
+  mission_title: string
+  mission_body: string
+  vision_title: string
+  vision_body: string
+  pricing_title: string
+  pricing_subtitle: string
+  pricing_note: string
+  cta_title: string
+  cta_subtitle: string
+  newsletter_title: string
+  newsletter_subtitle: string
+}
+
+export const homeContent = {
+  get: () => request<HomeContent>('/home-content/'),
+}
+
 // Plans
 export const plans = {
   list: (region?: string) => {

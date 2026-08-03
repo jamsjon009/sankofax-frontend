@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Check, ArrowRight, Zap } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Plan } from '@/types'
+import type { HomeContent } from '@/lib/api'
 
 const REGIONS = {
   global_north: { label: 'GLOBAL NORTH', sub: '(United States, UK, Canada, EU, Australia, etc.)' },
@@ -14,23 +15,27 @@ const REGIONS = {
 interface Props {
   northPlans: Plan[]
   southPlans: Plan[]
+  content?: HomeContent | null
 }
 
-export default function PricingPreviewSection({ northPlans, southPlans }: Props) {
+export default function PricingPreviewSection({ northPlans, southPlans, content }: Props) {
   const [region, setRegion] = useState<'global_north' | 'global_south'>('global_north')
   const plans = region === 'global_north' ? northPlans : southPlans
   const regionInfo = REGIONS[region]
+
+  const title = content?.pricing_title || 'Fair Pricing for a Global Community'
+  const subtitle = content?.pricing_subtitle ||
+    'We recognise the economic differences between regions, and we believe equitable access is non-negotiable. That’s why we offer tiered pricing.'
+  const note = content?.pricing_note || ''
 
   return (
     <section className="bg-surface-2 py-16">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="text-center mb-10">
-          <h2 className="section-title mb-4">Fair Pricing for a Global Community</h2>
+          <h2 className="section-title mb-4">{title}</h2>
           <p className="text-muted text-sm max-w-2xl mx-auto leading-relaxed">
-            We recognise the <strong className="text-charcoal">economic differences between regions</strong>, and
-            we believe equitable access is non-negotiable. That&apos;s why we offer{' '}
-            <strong className="text-charcoal">tiered pricing</strong>:
+            {subtitle}
           </p>
         </div>
 
@@ -54,6 +59,9 @@ export default function PricingPreviewSection({ northPlans, southPlans }: Props)
         <div className="text-center mb-10">
           <h3 className="text-lg font-bold text-charcoal tracking-widest">{regionInfo.label}</h3>
           <p className="text-sm text-muted mt-1">{regionInfo.sub}</p>
+          {note && (
+            <p className="text-xs text-muted/80 mt-3 max-w-lg mx-auto italic">{note}</p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
