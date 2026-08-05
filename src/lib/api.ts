@@ -7,17 +7,37 @@
   Product, Service, Order, ServiceBooking,
   StoryPackage, StorySubmission,
 } from '@/types'
+import { refreshAccessToken } from '@/lib/auth'
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api'
+
+// True when the request carried a bearer token (so a 401 is worth a refresh + retry).
+function hasBearer(headers?: HeadersInit): boolean {
+  if (!headers) return false
+  const h = new Headers(headers)
+  return !!h.get('Authorization')
+}
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   // Pull headers out of options so the spread below can't overwrite the merged
   // headers (which would drop Content-Type and make DRF reject the body as text/plain).
   const { headers: optionHeaders, ...rest } = options ?? {}
-  const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...optionHeaders },
-    ...rest,
-  })
+  const doFetch = (auth?: string) =>
+    fetch(`${BASE}${path}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...optionHeaders,
+        ...(auth ? { Authorization: `Bearer ${auth}` } : {}),
+      },
+      ...rest,
+    })
+
+  let res = await doFetch()
+  // Access token expired? Refresh once and retry the same request.
+  if (res.status === 401 && hasBearer(optionHeaders)) {
+    const fresh = await refreshAccessToken()
+    if (fresh) res = await doFetch(fresh)
+  }
   if (!res.ok) {
     const error = await res.json().catch(() => ({}))
     throw Object.assign(new Error(error.detail ?? 'API error'), { status: res.status, data: error })
@@ -29,11 +49,14 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
 // Multipart/form-data request (for file uploads)
 async function requestForm<T>(path: string, formData: FormData, token: string, method = 'POST'): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
-    method,
-    headers: { Authorization: `Bearer ${token}` },
-    body: formData,
-  })
+  const doFetch = (auth: string) =>
+    fetch(`${BASE}${path}`, { method, headers: { Authorization: `Bearer ${auth}` }, body: formData })
+
+  let res = await doFetch(token)
+  if (res.status === 401) {
+    const fresh = await refreshAccessToken()
+    if (fresh) res = await doFetch(fresh)
+  }
   if (!res.ok) {
     const error = await res.json().catch(() => ({}))
     throw Object.assign(new Error(error.detail ?? 'Upload error'), { status: res.status, data: error })
@@ -55,6 +78,10 @@ export const auth = {
 
   me: (token: string) =>
     request<User>('/auth/me/', { headers: { Authorization: `Bearer ${token}` } }),
+
+  // Upgrade a visitor to a Business Owner (free role flip).
+  upgradeToBusiness: (token: string) =>
+    request<User>('/auth/upgrade-to-business/', { method: 'POST', headers: authHeader(token) }),
 
   verifyEmail: (token: string) =>
     request<{ detail: string }>('/auth/verify-email/', { method: 'POST', body: JSON.stringify({ token }) }),
@@ -115,6 +142,17 @@ export const myListings = {
 
   uploadImage: (token: string, listingId: string, formData: FormData) =>
     requestForm<{ id: number; image: string }>(`/listings/${listingId}/images/`, formData, token),
+}
+
+// Saved / bookmarked listings (for visitors)
+export const savedListings = {
+  list: (token: string) =>
+    request<PaginatedResponse<ListingCard> | ListingCard[]>('/listings/saved/', { headers: authHeader(token) })
+      .then(r => (Array.isArray(r) ? r : (r.results ?? []))),
+
+  // Toggle save on/off — returns { saved: boolean }.
+  toggle: (token: string, slug: string) =>
+    request<{ saved: boolean }>(`/listings/${slug}/save_listing/`, { method: 'POST', headers: authHeader(token) }),
 }
 
 // Authenticated company CRUD

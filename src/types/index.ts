@@ -2,11 +2,17 @@ export interface User {
   id: string
   email: string
   phone_number: string
-  role: 'visitor' | 'business_owner' | 'staff' | 'admin'
+  role: 'visitor' | 'business_owner' | 'moderator' | 'staff' | 'admin' | 'super_admin'
   is_verified: boolean
   region: 'global_north' | 'global_south'
   avatar: string | null
   date_joined: string
+}
+
+/** Roles that can create and manage a business (list, sell, verify). */
+export function isBusinessRole(user: Pick<User, 'role'> | null | undefined): boolean {
+  if (!user) return false
+  return ['business_owner', 'moderator', 'staff', 'admin', 'super_admin'].includes(user.role)
 }
 
 export interface Category {
@@ -49,6 +55,8 @@ export interface ListingCard {
   featured: boolean
   business_type: string
   business_type_display: string
+  listing_status: string
+  view_count: number
   category_name: string
   category_slug: string
   company_name: string
@@ -83,6 +91,7 @@ export interface ListingDetail extends Omit<ListingCard, 'gallery_images'> {
   company_founder_story: string
   company_services: string[]
   company_socials: Record<string, string>
+  is_saved: boolean
   created_at: string
   published_at: string
 }

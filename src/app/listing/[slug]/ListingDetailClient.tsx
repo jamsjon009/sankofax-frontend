@@ -12,7 +12,10 @@ import type { ListingDetail, Review } from '@/types'
 import StarRating from '@/components/ui/StarRating'
 import VerificationBadge from '@/components/ui/VerificationBadge'
 import ConnectModal from '@/components/connections/ConnectModal'
-import { mediaUrl } from '@/lib/utils'
+import { mediaUrl, cn } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
+import { savedListings } from '@/lib/api'
+import { tokenStore } from '@/lib/auth'
 
 const SingleListingMap = lazy(() => import('@/components/map/SingleListingMap'))
 
@@ -35,7 +38,26 @@ export default function ListingDetailClient({
 }) {
   const [imgIdx, setImgIdx] = useState(0)
   const [connectKind, setConnectKind] = useState<'connect' | 'collaborate' | null>(null)
+  const [saved, setSaved] = useState(listing.is_saved)
+  const [savingBusy, setSavingBusy] = useState(false)
+  const router = useRouter()
   const images = listing.gallery_images.map(g => g.image)
+
+  async function toggleSave() {
+    const token = tokenStore.getAccess()
+    if (!token) { router.push('/login'); return }
+    setSavingBusy(true)
+    // optimistic
+    setSaved(s => !s)
+    try {
+      const res = await savedListings.toggle(token, listing.slug)
+      setSaved(res.saved)
+    } catch {
+      setSaved(s => !s) // revert on error
+    } finally {
+      setSavingBusy(false)
+    }
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -139,8 +161,18 @@ export default function ListingDetailClient({
                 )}
               </div>
               <div className="flex gap-2 flex-shrink-0">
-                <button className="btn-ghost p-2.5 rounded-xl border border-gray-200" aria-label="Save">
-                  <Heart className="w-5 h-5" />
+                <button
+                  onClick={toggleSave}
+                  disabled={savingBusy}
+                  className={cn(
+                    'btn-ghost p-2.5 rounded-xl border transition-colors disabled:opacity-60',
+                    saved ? 'border-red-200 bg-red-50 text-red-500' : 'border-gray-200',
+                  )}
+                  aria-label={saved ? 'Remove from saved' : 'Save'}
+                  aria-pressed={saved}
+                  title={saved ? 'Saved — click to remove' : 'Save this business'}
+                >
+                  <Heart className={cn('w-5 h-5', saved && 'fill-current')} />
                 </button>
                 <button className="btn-ghost p-2.5 rounded-xl border border-gray-200" aria-label="Share">
                   <Share2 className="w-5 h-5" />
