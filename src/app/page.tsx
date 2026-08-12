@@ -11,6 +11,10 @@ import FAQSection from '@/components/home/FAQSection'
 import CTABanner from '@/components/home/CTABanner'
 import NewsletterSection from '@/components/home/NewsletterSection'
 
+// Re-generate the homepage at most once a minute so admin changes (featured
+// listings, stats, testimonials, home content, etc.) show up without a rebuild.
+export const revalidate = 60
+
 export default async function HomePage() {
   const [catsRaw, featured, northPlans, southPlans, testimonialList, faqList, statsData, content] = await Promise.all([
     categories.list().catch(() => []),
