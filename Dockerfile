@@ -7,6 +7,16 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# NEXT_PUBLIC_* values are inlined into the client bundle at build time, so they
+# must be present now (not just at runtime). Passed in via docker build args.
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_MEDIA_URL
+ARG NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_SITE_NAME
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_MEDIA_URL=$NEXT_PUBLIC_MEDIA_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_SITE_NAME=$NEXT_PUBLIC_SITE_NAME
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
