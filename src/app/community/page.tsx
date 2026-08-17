@@ -51,10 +51,10 @@ export default function CommunityPage() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white py-14">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <h1 className="text-3xl sm:text-4xl font-bold mb-2">Community</h1>
-            <p className="text-white/70 max-w-xl">
+            <p className="text-white/70">
               Connect, ask questions and share resources with founders and members across the diaspora.
             </p>
           </div>
@@ -64,7 +64,7 @@ export default function CommunityPage() {
         </div>
       </section>
 
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search */}
         <div className="relative mb-4">
           <Search className="w-4 h-4 text-muted absolute left-3 top-1/2 -translate-y-1/2" />

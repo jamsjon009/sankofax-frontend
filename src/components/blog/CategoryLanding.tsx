@@ -67,14 +67,14 @@ export default async function CategoryLanding({
     <div className="min-h-screen">
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white py-16">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-white/60 text-sm font-semibold uppercase tracking-widest mb-2">{eyebrow}</p>
           <h1 className="text-4xl sm:text-5xl font-bold mb-3">{title}</h1>
-          <p className="text-white/70 text-lg max-w-2xl mx-auto">{subtitle}</p>
+          <p className="text-white/70 text-lg mx-auto">{subtitle}</p>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {posts.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-5xl mb-4">{emptyEmoji}</div>

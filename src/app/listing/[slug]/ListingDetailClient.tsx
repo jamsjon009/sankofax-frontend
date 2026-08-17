@@ -184,9 +184,10 @@ export default function ListingDetailClient({
           {/* Description */}
           <div>
             <h2 className="text-lg font-semibold text-charcoal mb-3">About</h2>
-            <div className="text-sm text-charcoal leading-relaxed whitespace-pre-line">
-              {listing.full_description}
-            </div>
+            <div
+              className="text-sm text-charcoal leading-relaxed [&_a]:text-primary-700 [&_a]:underline [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_p:last-child]:mb-0"
+              dangerouslySetInnerHTML={{ __html: listing.full_description }}
+            />
           </div>
 
           {/* Founder Story */}

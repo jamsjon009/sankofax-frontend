@@ -39,9 +39,9 @@ export default async function CareersPage() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl sm:text-5xl font-bold mb-3">Careers at SankofaX</h1>
-          <p className="text-white/70 text-lg max-w-2xl">
+          <p className="text-white/70 text-lg">
             Help us build the global platform that connects the African diaspora with the
             businesses, services, and experiences that reflect their culture.
           </p>
@@ -49,7 +49,7 @@ export default async function CareersPage() {
       </section>
 
       {/* Why work with us */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <h2 className="text-2xl font-semibold text-charcoal mb-2">Why work with us</h2>
         <p className="text-[15px] leading-relaxed text-muted max-w-2xl mb-8">
           We are a mission-driven team building something that matters. If you care about visibility,
@@ -73,7 +73,7 @@ export default async function CareersPage() {
 
       {/* Open positions */}
       <section className="bg-surface-2 border-y border-gray-100 py-14">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl font-semibold text-charcoal mb-3">Open positions</h2>
           <p className="text-[15px] leading-relaxed text-muted mb-6">
             We don&apos;t have any open roles right now — but we&apos;re always glad to hear from
@@ -91,7 +91,7 @@ export default async function CareersPage() {
 
       {/* Explore CTA */}
       <section className="py-12">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <h3 className="font-semibold text-charcoal mb-1">Not looking for a job?</h3>
             <p className="text-muted text-sm">Discover Black and African-owned businesses on SankofaX.</p>

@@ -41,7 +41,7 @@ export default async function CategoryPage({ params }: Props) {
         <div className="relative z-10">
           <h1 className="text-3xl sm:text-4xl font-bold mb-3">{cat.name}</h1>
           {cat.description && (
-            <p className="text-white/70 text-lg max-w-xl">{cat.description}</p>
+            <p className="text-white/70 text-lg">{cat.description}</p>
           )}
           <p className="mt-4 text-white/50 text-sm">{data.count} listing{data.count !== 1 ? 's' : ''} found</p>
         </div>

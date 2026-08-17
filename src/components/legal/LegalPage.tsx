@@ -34,7 +34,7 @@ export default async function LegalPage({
     <div className="min-h-screen">
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white py-16">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl sm:text-5xl font-bold mb-3">{title}</h1>
           {updated && (
             <p className="text-white/60 text-sm">Last updated {updated}</p>
@@ -44,7 +44,7 @@ export default async function LegalPage({
 
       {/* Content */}
       <section className="py-12">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {page ? (
             <div
               className="prose prose-lg max-w-none prose-headings:text-charcoal prose-a:text-primary-700 prose-strong:text-charcoal"
@@ -60,7 +60,7 @@ export default async function LegalPage({
 
       {/* Still need help */}
       <section className="bg-surface-2 border-t border-gray-100 py-10">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <h3 className="font-semibold text-charcoal mb-1">Questions about this policy?</h3>
             <p className="text-muted text-sm">Reach out and our team will get back to you.</p>

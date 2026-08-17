@@ -54,7 +54,7 @@ export default function HeroSection({ categories, stats, content }: { categories
             {title}<br />
             <span className="text-accent-400">{titleHighlight}</span>
           </h1>
-          <p className="mt-5 text-lg text-white/70 max-w-xl leading-relaxed">
+          <p className="mt-5 text-lg text-white/70 leading-relaxed">
             {subtitle}
           </p>
         </div>

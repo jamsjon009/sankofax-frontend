@@ -38,7 +38,7 @@ export default function PricingPreviewSection({ northPlans, southPlans, content 
 
   return (
     <section className="bg-surface-2 py-16">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div className="text-center mb-10">
           <h2 className="section-title mb-4">{title}</h2>

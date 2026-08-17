@@ -66,11 +66,11 @@ export default function ThreadPage({ params }: { params: Promise<{ slug: string 
   }
 
   if (thread === undefined) {
-    return <div className="max-w-3xl mx-auto px-4 py-12"><div className="skeleton h-64 w-full rounded-2xl" /></div>
+    return <div className="max-w-7xl mx-auto px-4 py-12"><div className="skeleton h-64 w-full rounded-2xl" /></div>
   }
   if (thread === null) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
+      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <p className="text-muted mb-4">This discussion could not be found.</p>
         <Link href="/community" className="btn-outline">Back to Community</Link>
       </div>
@@ -78,7 +78,7 @@ export default function ThreadPage({ params }: { params: Promise<{ slug: string 
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <Link href="/community" className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-charcoal mb-5">
         <ArrowLeft className="w-4 h-4" /> Back to Community
       </Link>

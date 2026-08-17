@@ -40,7 +40,8 @@ export default function DirectoryClient({ categories, badges, data, initialFilte
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid')
 
   const updateFilters = useCallback((updates: Record<string, string | undefined>) => {
-    const next = { ...filters, ...updates, page: undefined }
+    // reset to page 1 when a filter changes, but keep an explicit page change
+    const next = { ...filters, page: undefined, ...updates }
     setFilters(next)
     const params = new URLSearchParams()
     Object.entries(next).forEach(([k, v]) => {

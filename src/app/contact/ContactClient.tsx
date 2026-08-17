@@ -20,6 +20,9 @@ interface Props {
   site: SiteSettings | null
 }
 
+// Toggle to re-enable the contact map section.
+const SHOW_MAP: boolean = false
+
 export default function ContactClient({ site }: Props) {
   const [sent, setSent] = useState(false)
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Form>({
@@ -62,7 +65,7 @@ export default function ContactClient({ site }: Props) {
       <section className="bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl sm:text-5xl font-bold mb-3">Contact Us</h1>
-          <p className="text-white/70 max-w-lg text-lg">
+          <p className="text-white/70 text-lg">
             Have a question, partnership idea, or need support? We would love to hear from you.
           </p>
         </div>
@@ -160,7 +163,8 @@ export default function ContactClient({ site }: Props) {
           </div>
         </div>
 
-        {/* Map — full width */}
+        {/* Map — temporarily hidden (set SHOW_MAP to true to re-enable) */}
+        {SHOW_MAP && (
         <div className="mt-12 rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
           {site?.map_embed_code ? (
             <div
@@ -190,6 +194,7 @@ export default function ContactClient({ site }: Props) {
             <span className="badge bg-primary-50 text-primary-700 border border-primary-100 text-[10px]">Global</span>
           </div>
         </div>
+        )}
       </section>
 
       {/* FAQ strip */}
@@ -206,7 +211,7 @@ export default function ContactClient({ site }: Props) {
       </section>
 
       <section className="bg-primary-700 text-white py-14">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">
             Join the Directory. Be Seen. Be Supported. Be SankofaX.
           </h2>

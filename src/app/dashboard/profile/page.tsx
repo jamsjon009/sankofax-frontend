@@ -167,8 +167,7 @@ export default function ProfilePage() {
         <div className="card overflow-hidden">
           <div className="h-24 bg-gradient-to-r from-primary-800 via-primary-700 to-primary-900" />
           <div className="px-5 pb-5">
-            <div className="flex items-end gap-4 -mt-10">
-              <div className="relative">
+            <div className="relative inline-block -mt-10">
                 <div className="w-20 h-20 rounded-2xl ring-4 ring-white bg-primary-100 overflow-hidden flex items-center justify-center shadow-sm">
                   {avatarUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -188,8 +187,8 @@ export default function ProfilePage() {
                 </button>
                 <input ref={fileRef} type="file" accept="image/*" onChange={onAvatarChange} className="hidden" />
               </div>
-              <div className="pb-1 min-w-0">
-                <p className="font-semibold text-charcoal truncate">{user?.email}</p>
+            <div className="mt-3 min-w-0">
+              <p className="font-semibold text-charcoal truncate">{user?.email}</p>
                 <div className="flex flex-wrap items-center gap-1.5 mt-1">
                   <span className="text-[11px] px-2 py-0.5 rounded-full bg-primary-50 text-primary-700 capitalize font-medium">
                     {user?.role?.replace('_', ' ')}
@@ -206,7 +205,6 @@ export default function ProfilePage() {
                   )}
                 </div>
               </div>
-            </div>
 
             {/* Completeness meter */}
             <div className="mt-5">

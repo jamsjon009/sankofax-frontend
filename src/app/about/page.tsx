@@ -11,9 +11,9 @@ export default function AboutPage() {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 text-white py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl sm:text-5xl font-bold mb-3">About SankofaX</h1>
-          <p className="text-white/70 text-lg max-w-2xl">
+          <p className="text-white/70 text-lg">
             The global platform connecting the African diaspora with Black and African-owned
             businesses, services, and experiences worldwide.
           </p>
@@ -21,7 +21,7 @@ export default function AboutPage() {
       </section>
 
       {/* Content */}
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-10">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-10">
         <div>
           <h2 className="text-xl font-semibold text-charcoal mb-3">Our Mission</h2>
           <p className="text-[15px] leading-relaxed text-charcoal">
